@@ -12,7 +12,7 @@ def send_health_email(station_parameters):
    hostname = socket.gethostname()
 
    # Get the MAC address
-   mac_address = utils.get_mac_address()
+   mac_address = utils.get_mac_address('-')
 
    # Get the IP address
    ip_address = utils.get_ip_address()

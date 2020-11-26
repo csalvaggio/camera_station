@@ -236,7 +236,7 @@ while True:
             # Form the current filename for saving the image
             basename = iso8601_time_string.replace(':', '-').replace('.', '-')
             basename += '_'
-            basename += '{0}'.format(utils.get_mac_address())
+            basename += '{0}'.format(utils.get_mac_address('-'))
             basename += '.{0}'.format(camera_parameters['imageExtension'])
             local_filename = \
                os.path.join(station_parameters['localDirectory'], basename)

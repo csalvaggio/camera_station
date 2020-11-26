@@ -12,6 +12,7 @@ def upload_files_to_ftp_server(local_filenames,
    ftp.login()
    ftp.cwd(target_directory)
 
+   files_uploaded = 0
    bytes_uploaded = 0
    start_time = time.perf_counter()
    for local_filename in local_filenames:
@@ -25,6 +26,7 @@ def upload_files_to_ftp_server(local_filenames,
          f = open(local_filename, 'rb')
          ftp.storbinary('STOR ' + target_filename, f)
          f.close()
+         files_uploaded += 1
          bytes_uploaded += os.path.getsize(local_filename)
       except ftplib.error_perm:
          msg = '\n'
@@ -49,6 +51,8 @@ def upload_files_to_ftp_server(local_filenames,
    if report_stats:
       elapsed_time = time.perf_counter() - start_time
       msg = '-----------------------------------'
+      msg += '\n'
+      msg += 'Transferred: {0:,} files'.format(files_uploaded)
       msg += '\n'
       msg += 'Transferred: {0:,} bytes'.format(bytes_uploaded)
       msg += '\n'

@@ -161,23 +161,29 @@ if __name__ == '__main__':
    import battery
 
    try:
-      voltmeter = battery.Voltmeter()
+      voltmeters = []
+      number_of_channels = 8
+      for channel in range(number_of_channels):
+         voltmeters.append(battery.Voltmeter(channel))
       time.sleep(2)
+
       while True:
-         voltage = voltmeter.read()
-         if voltage:
-            msg = 'Voltage:  '
-            msg += '{0:.2f} [V]'.format(voltage)
-            msg += '\n'
-            sys.stdout.write(msg)
-         else:
-            msg = '*** ERROR *** '
-            msg += 'No ADC output received, voltage not computed'
-            msg += '\n'
-            sys.stdout.write(msg)
+         msg = 'VOLTAGES'
+         msg += '\n'
+         for channel in range(number_of_channels):
+            voltage = voltmeters[channel].read()
+            if voltage:
+               msg += 'Channel {0}: {1:.2f} [V]'.format(channel+1, voltage)
+               msg += '\n'
+            else:
+               msg += 'Channel {0}: n/a'.format(channel+1, voltage)
+               msg += '\n'
+         msg += '\n'
+         sys.stdout.write(msg)
          time.sleep(1)
 
    except KeyboardInterrupt:
       msg = '\n'
       sys.stdout.write(msg)
-      voltmeter.close()
+      for voltmeter in voltmeters:
+         voltmeter.close()
