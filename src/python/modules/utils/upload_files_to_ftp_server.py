@@ -8,9 +8,33 @@ def upload_files_to_ftp_server(local_filenames,
                                target_directory,
                                verbose=False,
                                report_stats=False):
-   ftp = ftplib.FTP(target_host)
+
+   try:
+      ftp = ftplib.FTP(target_host)
+   except:
+      msg = '*** WARNING *** Connection to FTP server could not be made'
+      msg += '\n'
+      msg += '... aborting upload'
+      msg += '\n'
+      msg += '\n'
+      sys.stdout.write(msg)
+      sys.stdout.flush()
+      return False
+
    ftp.login()
-   ftp.cwd(target_directory)
+
+   try:
+      ftp.cwd(target_directory)
+   except:
+      msg = '*** WARNING *** Could not change to target directory on the '
+      msg += 'FTP server'
+      msg += '\n'
+      msg += '... aborting upload'
+      msg += '\n'
+      msg += '\n'
+      sys.stdout.write(msg)
+      sys.stdout.flush()
+      return False
 
    files_uploaded = 0
    bytes_uploaded = 0
@@ -30,7 +54,7 @@ def upload_files_to_ftp_server(local_filenames,
          bytes_uploaded += os.path.getsize(local_filename)
       except ftplib.error_perm:
          msg = '\n'
-         msg += '*** ERROR *** A file with the same name already exists '
+         msg += '*** WARNING *** A file with the same name already exists '
          msg += 'on the server'
          msg += '\n'
          msg += '... moving on to the next file'
@@ -64,6 +88,8 @@ def upload_files_to_ftp_server(local_filenames,
       msg += '\n'
       sys.stdout.write(msg)
       sys.stdout.flush()
+
+   return True
 
 
 

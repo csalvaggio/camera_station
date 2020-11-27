@@ -63,10 +63,14 @@ def send_health_email(station_parameters):
                     station_parameters['healthEmailReceivers'],
                     message)
    except smtplib.SMTPException:
-      msg = '*** ERROR *** Unable to send daily health message'
+      msg = '*** WARNING *** Unable to send daily health message'
       msg += '\n'
-      sys.stderr.write(msg)
-      sys.exit()
+      msg += '... aborting attempt'
+      msg += '\n'
+      msg += '\n'
+      sys.stdout.write(msg)
+      sys.stdout.flush()
+      return
 
 
 

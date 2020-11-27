@@ -99,10 +99,13 @@ while True:
       if verbose:
          msg = 'Sending an initial system health e-mail ...'
          msg += '\n'
-         msg += '\n'
          sys.stdout.write(msg)
          sys.stdout.flush()
       utils.send_health_email(station_parameters)
+      if verbose:
+         msg = '\n'
+         sys.stdout.write(msg)
+         sys.stdout.flush()
 
       initial_startup = False
 
@@ -141,10 +144,13 @@ while True:
             if verbose:
                msg = 'Sending a system health e-mail ...'
                msg += '\n'
-               msg += '\n'
                sys.stdout.write(msg)
                sys.stdout.flush()
             utils.send_health_email(station_parameters)
+            if verbose:
+               msg = '\n'
+               sys.stdout.write(msg)
+               sys.stdout.flush()
             time.sleep(1)
             continue
 
@@ -161,12 +167,13 @@ while True:
                utils.get_file_listing(station_parameters['localDirectory'])
             # Perform the upload
             if len(local_filenames) > 0:
-               utils.upload_files_to_ftp_server(
-                  local_filenames,
-                  station_parameters['ftpServer'],
-                  station_parameters['ftpDirectory'],
-                  verbose=verbose,
-                  report_stats=verbose)
+               upload_successful = \
+                  utils.upload_files_to_ftp_server(
+                     local_filenames,
+                     station_parameters['ftpServer'],
+                     station_parameters['ftpDirectory'],
+                     verbose=verbose,
+                     report_stats=verbose)
                if verbose:
                   msg = '\n'
                   sys.stdout.write(msg)
@@ -180,14 +187,16 @@ while True:
                   sys.stdout.flush()
             # Remove the files that were just uploaded
             if len(local_filenames) > 0:
-               if verbose:
-                  msg = 'Removing the daily imagery that was just uploaded ...'
-                  msg += '\n'
-                  msg += '\n'
-                  sys.stdout.write(msg)
-                  sys.stdout.flush()
-               for local_filename in local_filenames:
-                  os.remove(local_filename)
+               if upload_successful:
+                  if verbose:
+                     msg = 'Removing the daily imagery that was just '
+                     msg += 'uploaded ...'
+                     msg += '\n'
+                     msg += '\n'
+                     sys.stdout.write(msg)
+                     sys.stdout.flush()
+                  for local_filename in local_filenames:
+                     os.remove(local_filename)
             time.sleep(1)
             continue
 
