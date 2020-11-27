@@ -57,8 +57,28 @@ def send_health_email(station_parameters):
    message += 'Storage used:  {0:,} [bytes]\n'.format(bytes_used)
 
    # Send the message
+   smtp = smtplib.SMTP()
    try:
-      smtp = smtplib.SMTP(station_parameters['smtpServer'])
+      smtp.connect(station_parameters['smtpServer'])
+   except socket.gaierror:
+      msg = '*** ERROR *** SMTP server address is invalid or could not be '
+      msg += 'resolved'
+      msg += '\n'
+      sys.stderr.write(msg)
+      sys.stderr.flush()
+      sys.exit()
+   except:
+      msg = '*** WARNING *** Unable to connect to SMTP server to send'
+      msg += 'daily health message'
+      msg += '\n'
+      msg += '... aborting attempt'
+      msg += '\n'
+      msg += '\n'
+      sys.stdout.write(msg)
+      sys.stdout.flush()
+      return
+
+   try:
       smtp.sendmail(station_parameters['healthEmailSender'],
                     station_parameters['healthEmailReceivers'],
                     message)
