@@ -1,3 +1,4 @@
+import sys
 import RPi.GPIO
 
 class Voltmeter(object):
@@ -68,11 +69,13 @@ class Voltmeter(object):
                       calibration_constant=(3.3 / 1024) * 5):
 
       if mcp3008_analog_input_channel < 0 or mcp3008_analog_input_channel > 7:
-         msg = '*** ERRROR *** '
-         msg += 'Specified MCP3008 analog input channel out of range [0, 7]'
+         msg = '*** ERROR *** '
+         msg += 'Specified MCP3008 analog input channel '
+         msg += '({0}) '.format(mcp3008_analog_input_channel)
+         msg += 'out of range [0, 7]'
          msg += '\n'
-         std.stderr.write(msg)
-         std.stderr.flush()
+         sys.stderr.write(msg)
+         sys.stderr.flush()
          sys.exit()
 
       self._mcp3008_analog_input_channel = mcp3008_analog_input_channel
@@ -105,11 +108,13 @@ class Voltmeter(object):
    @analog_input_channel.setter
    def analog_input_channel(self, mcp3008_analog_input_channel):
       if mcp3008_analog_input_channel < 0 or mcp3008_analog_input_channel > 7:
-         msg = '*** ERRROR *** '
-         msg += 'Specified MCP3008 analog input channel out of range [0, 7]'
+         msg = '*** ERROR *** '
+         msg += 'Specified MCP3008 analog input channel '
+         msg += '({0}) '.format(mcp3008_analog_input_channel)
+         msg += 'out of range [0, 7]'
          msg += '\n'
-         std.stderr.write(msg)
-         std.stderr.flush()
+         sys.stderr.write(msg)
+         sys.stderr.flush()
          sys.exit()
 
       self._mcp3008_analog_input_channel = mcp3008_analog_input_channel
