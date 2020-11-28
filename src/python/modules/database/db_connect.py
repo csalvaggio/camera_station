@@ -11,8 +11,8 @@ def db_connect():
       )
       return db
    except:
-      msg = '*** ERROR *** Database connection could not be established'
+      msg = '*** WARNING *** Database connection could not be established'
       msg += '\n'
       sys.stderr.write(msg)
       sys.stderr.flush()
-      sys.exit()
+      return None

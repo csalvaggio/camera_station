@@ -37,6 +37,7 @@ verbose = args.verbose
 dump_station_parameters_database = args.dump_station_parameters_database
 
 initial_startup = True
+upload_successful = False
 
 while True:
    # Pick up the latest parameters from the databases
@@ -51,8 +52,44 @@ while True:
          msg += '\n'
          sys.stdout.write(msg)
          sys.stdout.flush()
+
       station_parameters = database.get_station_parameters()
+      if station_parameters:
+         station_parameters_pickup_successful = True
+         previous_station_parameters = station_parameters
+      else:
+         station_parameters_pickup_successful = False
+         if initial_startup:
+            msg = '... exiting'
+            msg += '\n'
+            sys.stderr.write(msg)
+            sys.stderr.flush()
+            sys.exit()
+         else:
+            msg = '... using previous station parameters'
+            msg += '\n'
+            sys.stdout.write(msg)
+            sys.stdout.flush()
+            station_parameters = previous_station_parameters
+
       hourly_parameters = database.get_hourly_parameters()
+      if hourly_parameters:
+         hourly_parameters_pickup_successful = True
+         previous_hourly_parameters = hourly_paramaters
+      else:
+         hourly_parameters_pickup_successful = False
+         if initial_startup:
+            msg = '... exiting'
+            msg += '\n'
+            sys.stderr.write(msg)
+            sys.stderr.flush()
+            sys.exit()
+         else:
+            msg = '... using previous hourly parameters'
+            msg += '\n'
+            sys.stdout.write(msg)
+            sys.stdout.flush()
+            hourly_parameters = previous_hourly_parameters
 
    # Parse the database boolean parameters that need language-specific
    # interpretation
@@ -101,7 +138,9 @@ while True:
          msg += '\n'
          sys.stdout.write(msg)
          sys.stdout.flush()
-      utils.send_health_email(station_parameters)
+      utils.send_health_email(station_parameters,
+                              station_parameters_pickup_successful,
+                              hourly_parameters_pickup_successful)
       if verbose:
          msg = '\n'
          sys.stdout.write(msg)
@@ -146,7 +185,10 @@ while True:
                msg += '\n'
                sys.stdout.write(msg)
                sys.stdout.flush()
-            utils.send_health_email(station_parameters)
+            utils.send_health_email(station_parameters,
+                                    station_parameters_pickup_successful,
+                                    hourly_parameters_pickup_successful,
+                                    upload_successful)
             if verbose:
                msg = '\n'
                sys.stdout.write(msg)
@@ -197,6 +239,14 @@ while True:
                      sys.stdout.flush()
                   for local_filename in local_filenames:
                      os.remove(local_filename)
+               else:
+                  if verbose:
+                     msg = 'Daily imagery upload was not successful, leaving '
+                     msg += 'imagery in place ...'
+                     msg += '\n'
+                     msg += '\n'
+                     sys.stdout.write(msg)
+                     sys.stdout.flush()
             time.sleep(1)
             continue
 

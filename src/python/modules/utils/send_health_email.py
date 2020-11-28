@@ -7,7 +7,11 @@ import battery
 import clock
 import utils
 
-def send_health_email(station_parameters):
+def send_health_email(station_parameters,
+                      station_parameters_pickup_successful=False,
+                      hourly_parameters_pickup_successful=False,
+                      upload_successful=False):
+
    # Get the hostname
    hostname = socket.gethostname()
 
@@ -55,6 +59,20 @@ def send_health_email(station_parameters):
    message += '\n'
    message += 'Number of image files:  {0:,}\n'.format(len(filenames))
    message += 'Storage used:  {0:,} [bytes]\n'.format(bytes_used)
+   message += '\n'
+   if station_parameters_pickup_successful:
+      message += 'Previous station parameters update status:  SUCCESS\n'
+   else:
+      message += 'Previous station parameters update status:  FAILED\n'
+   if hourly_parameters_pickup_successful:
+      message += 'Previous hourly parameters update status:  SUCCESS\n'
+   else:
+      message += 'Previous hourly parameters update status:  FAILED\n'
+   message += '\n'
+   if upload_successful:
+      message += 'Previous file upload status:  SUCCESS\n'
+   else:
+      message += 'Previous file upload status:  FAILED\n'
 
    # Send the message
    smtp = smtplib.SMTP()
@@ -108,4 +126,7 @@ if __name__ == '__main__':
    station_parameters['healthEmailReceivers'] = receivers.split('|')
    station_parameters['smtpServer'] = 'mail.cis.rit.edu'
 
-   utils.send_health_email(station_parameters)
+   utils.send_health_email(station_parameters,
+                           True,
+                           True,
+                           True)
