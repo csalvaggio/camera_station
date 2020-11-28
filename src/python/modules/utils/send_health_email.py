@@ -60,19 +60,16 @@ def send_health_email(station_parameters,
    message += 'Number of image files:  {0:,}\n'.format(len(filenames))
    message += 'Storage used:  {0:,} [bytes]\n'.format(bytes_used)
    message += '\n'
-   if station_parameters_pickup_successful:
-      message += 'Previous station parameters update status:  SUCCESS\n'
-   else:
-      message += 'Previous station parameters update status:  FAILED\n'
-   if hourly_parameters_pickup_successful:
-      message += 'Previous hourly parameters update status:  SUCCESS\n'
-   else:
-      message += 'Previous hourly parameters update status:  FAILED\n'
+   message += 'Most recent station parameters update:  '
+   message += \
+      'SUCCESS\n' if station_parameters_pickup_successful else 'FAILED\n'
+   message += 'Most recent hourly parameters update:  '
+   message += \
+      'SUCCESS\n' if hourly_parameters_pickup_successful else 'FAILED\n'
    message += '\n'
-   if upload_successful:
-      message += 'Previous file upload status:  SUCCESS\n'
-   else:
-      message += 'Previous file upload status:  FAILED\n'
+   message += 'Most recent file upload attempt:  '
+   message += \
+      'SUCCESS\n' if upload_successful else 'FAILED\n'
 
    # Send the message
    smtp = smtplib.SMTP()

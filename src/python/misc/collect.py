@@ -24,6 +24,14 @@ parser.add_argument('-v', '--verbose',
                     default=False,
                     help=help_message)
 
+help_message = 'keep pre-existing files in the output directory '
+help_message += '[default is False]'
+parser.add_argument('-k', '--keep',
+                    dest='keep_pre_existing_files',
+                    action='store_true',
+                    default=False,
+                    help=help_message)
+
 help_message = 'perform a camera station parameter database dump '
 help_message += '[default is False]'
 parser.add_argument('-d', '--dump-database',
@@ -34,6 +42,7 @@ parser.add_argument('-d', '--dump-database',
 
 args = parser.parse_args()
 verbose = args.verbose
+keep_pre_existing_files = args.keep_pre_existing_files
 dump_station_parameters_database = args.dump_station_parameters_database
 
 initial_startup = True
@@ -75,7 +84,7 @@ while True:
       hourly_parameters = database.get_hourly_parameters()
       if hourly_parameters:
          hourly_parameters_pickup_successful = True
-         previous_hourly_parameters = hourly_paramaters
+         previous_hourly_parameters = hourly_parameters
       else:
          hourly_parameters_pickup_successful = False
          if initial_startup:
@@ -124,13 +133,20 @@ while True:
       local_filenames = \
          utils.get_file_listing(station_parameters['localDirectory'])
       if len(local_filenames) > 0:
-         if verbose:
-            msg = 'Removing pre-existing files from the output directory ...'
-            msg += '\n'
-            sys.stdout.write(msg)
-            sys.stdout.flush()
-         for local_filename in local_filenames:
-            os.remove(local_filename)
+         if keep_pre_existing_files:
+            if verbose:
+               msg = 'Keeping pre-existing files in the output directory ...'
+               msg += '\n'
+               sys.stdout.write(msg)
+               sys.stdout.flush()
+         else:
+            if verbose:
+               msg = 'Removing pre-existing files from the output directory ...'
+               msg += '\n'
+               sys.stdout.write(msg)
+               sys.stdout.flush()
+            for local_filename in local_filenames:
+               os.remove(local_filename)
 
       # Send an initial system health e-mail
       if verbose:
