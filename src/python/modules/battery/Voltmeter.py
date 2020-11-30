@@ -25,8 +25,10 @@ class Voltmeter(object):
          The public getter and setter methods for the input channel used
          on the MCP3008 analog-to-digital converter chip
 
-      read()
-         The public method for reading the current voltage
+      read(samples)
+         The public method for reading the current voltage (the current
+         voltage is an average of n samples specified by the calling
+         method [default is samples=1])
 
       close()
          The public method to close the voltmeter/clean up the GPIO
@@ -61,12 +63,31 @@ class Voltmeter(object):
       risk of using the source code.
    """
 
+   # Maximum Voltage 16.5 [V]
+   R1 = 30000  # [Ohms]
+   R2 = 7500   # [Ohms]
+
+   # Maximum Voltage 26.4 [V]
+   R1 = 33000  # [Ohms]
+   R2 = 4700   # [Ohms]
+
+   # Minimum reportable voltage
+   MINIMUM_VOLTAGE = 2  # [V]
+
+   # For the Raspberry Pi (3.3V) and Microchip Technology MCP3008 (10-bit)
+   VOLTS_PER_COUNT = 3.3 / 1024  # [V/count]
+
+   # Calibration for voltage divider circuit
+   CALIBRATION_CONSTANT = VOLTS_PER_COUNT * (R1/R2 + 1)  # [V/count]
+
+
    def __init__(self, mcp3008_analog_input_channel=0,
                       spi_serial_clock_pin=11,
                       spi_serial_data_out_pin=9,
                       spi_serial_data_in_pin=10,
                       spi_chip_select_shutdown_input_pin=8,
-                      calibration_constant=(3.3 / 1024) * 5):
+                      calibration_constant=CALIBRATION_CONSTANT,
+                      minimum_voltage=MINIMUM_VOLTAGE):
 
       if mcp3008_analog_input_channel < 0 or mcp3008_analog_input_channel > 7:
          msg = '*** ERROR *** '
@@ -81,6 +102,7 @@ class Voltmeter(object):
       self._mcp3008_analog_input_channel = mcp3008_analog_input_channel
 
       self._calibration_constant = calibration_constant
+      self._minimum_voltage = minimum_voltage
 
       self._spi_serial_clock_pin = \
          spi_serial_clock_pin
@@ -119,39 +141,55 @@ class Voltmeter(object):
 
       self._mcp3008_analog_input_channel = mcp3008_analog_input_channel
 
-   def read(self):
-      RPi.GPIO.output(self._spi_chip_select_shutdown_input_pin, RPi.GPIO.HIGH)
-      RPi.GPIO.output(self._spi_serial_clock_pin, RPi.GPIO.LOW)
-      RPi.GPIO.output(self._spi_chip_select_shutdown_input_pin, RPi.GPIO.LOW)
+   def read(self, samples=1):
+      accumulated_adc_output = 0
+      for sample in range(samples):
+         RPi.GPIO.output(self._spi_chip_select_shutdown_input_pin,
+                         RPi.GPIO.HIGH)
+         RPi.GPIO.output(self._spi_serial_clock_pin,
+                         RPi.GPIO.LOW)
+         RPi.GPIO.output(self._spi_chip_select_shutdown_input_pin,
+                         RPi.GPIO.LOW)
 
-      command = self._mcp3008_analog_input_channel
-      command |= 0x18
-      command <<= 3
-      for i in range(5):
-         if (command & 0x80):
-            RPi.GPIO.output(self._spi_serial_data_in_pin, RPi.GPIO.HIGH)
-         else:
-            RPi.GPIO.output(self._spi_serial_data_in_pin, RPi.GPIO.LOW)
-         command <<= 1
-         RPi.GPIO.output(self._spi_serial_clock_pin, RPi.GPIO.HIGH)
-         RPi.GPIO.output(self._spi_serial_clock_pin, RPi.GPIO.LOW)
+         command = self._mcp3008_analog_input_channel
+         command |= 0x18
+         command <<= 3
+         for i in range(5):
+            if (command & 0x80):
+               RPi.GPIO.output(self._spi_serial_data_in_pin,
+                               RPi.GPIO.HIGH)
+            else:
+               RPi.GPIO.output(self._spi_serial_data_in_pin,
+                               RPi.GPIO.LOW)
+            command <<= 1
+            RPi.GPIO.output(self._spi_serial_clock_pin,
+                            RPi.GPIO.HIGH)
+            RPi.GPIO.output(self._spi_serial_clock_pin,
+                            RPi.GPIO.LOW)
 
-      adc_output = 0
-      for i in range(12):
-         RPi.GPIO.output(self._spi_serial_clock_pin, RPi.GPIO.HIGH)
-         RPi.GPIO.output(self._spi_serial_clock_pin, RPi.GPIO.LOW)
-         adc_output <<= 1
-         if (RPi.GPIO.input(self._spi_serial_data_out_pin)):
-            adc_output |= 0x1
+         adc_output = 0
+         for i in range(12):
+            RPi.GPIO.output(self._spi_serial_clock_pin,
+                            RPi.GPIO.HIGH)
+            RPi.GPIO.output(self._spi_serial_clock_pin,
+                            RPi.GPIO.LOW)
+            adc_output <<= 1
+            if (RPi.GPIO.input(self._spi_serial_data_out_pin)):
+               adc_output |= 0x1
 
-      RPi.GPIO.output(self._spi_chip_select_shutdown_input_pin, RPi.GPIO.HIGH)
+         RPi.GPIO.output(self._spi_chip_select_shutdown_input_pin,
+                         RPi.GPIO.HIGH)
 
-      adc_output >>= 1
+         adc_output >>= 1
 
-      if adc_output == 0:
+         accumulated_adc_output += adc_output
+
+      voltage = self._calibration_constant * accumulated_adc_output / samples
+
+      if voltage < self._minimum_voltage:
          return None
       else:
-         return self._calibration_constant * adc_output
+         return voltage
 
    def close(self):
       RPi.GPIO.cleanup()
@@ -176,7 +214,7 @@ if __name__ == '__main__':
          msg = 'VOLTAGES'
          msg += '\n'
          for channel in range(number_of_channels):
-            voltage = voltmeters[channel].read()
+            voltage = voltmeters[channel].read(samples=16)
             if voltage:
                msg += 'Channel {0}: {1:.2f} [V]'.format(channel+1, voltage)
                msg += '\n'
@@ -185,7 +223,7 @@ if __name__ == '__main__':
                msg += '\n'
          msg += '\n'
          sys.stdout.write(msg)
-         time.sleep(1)
+         time.sleep(5)
 
    except KeyboardInterrupt:
       msg = '\n'

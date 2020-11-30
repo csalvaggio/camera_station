@@ -35,7 +35,7 @@ def send_health_email(station_parameters,
 
    # Get the battery voltage
    voltmeter = battery.Voltmeter()
-   voltage = voltmeter.read()
+   voltage = voltmeter.read(samples=16)
    voltmeter.close()
 
    # Form the message
