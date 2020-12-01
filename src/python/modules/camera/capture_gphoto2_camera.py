@@ -24,7 +24,7 @@ def capture_gphoto2_camera(camera_parameters, filepath, verbose=False):
 
    # Extract image from the camera's SD card and save to local disk
    if verbose:
-      msg = '... extracting image from camera\'s SD to '
+      msg = '... extracting image from camera\'s SD card to'
       msg += '\n'
       msg += '       {0}'.format(filepath)
       msg += '\n'
@@ -35,6 +35,16 @@ def capture_gphoto2_camera(camera_parameters, filepath, verbose=False):
                                                camera_filepath.name,
                                                gp.GP_FILE_TYPE_NORMAL)
    camera_file.save(filepath)
+
+   # Delete image from the camera's SD card
+   if verbose:
+      msg = '... deleting image from camera\'s SD card'
+      msg += '\n'
+      sys.stdout.write(msg)
+      sys.stdout.flush()
+   camera_parameters['connection'].file_delete(camera_filepath.folder,
+                                               camera_filepath.name)
+
    if verbose:
       msg = '... completed'
       msg += '\n'
