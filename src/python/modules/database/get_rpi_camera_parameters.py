@@ -14,7 +14,6 @@ def get_rpi_camera_parameters(verbose=False):
    if db.is_connected:
       # Establish the list of fields to query
       fields = ('ID',
-                'imageExtension',
                 'secondsToWarmup',
                 'useLosslessJpegCompression',
                 'brightness',

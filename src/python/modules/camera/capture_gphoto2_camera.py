@@ -1,16 +1,15 @@
 import os
+import os.path
 import sys
 
 import gphoto2 as gp
 
-def capture_gphoto2_camera(camera_parameters, filepath, verbose=False):
+def capture_gphoto2_camera(camera_parameters, basename, verbose=False):
    """
    IMPORTANT NOTE:
 
    When using this capture method, the camera must be set to capture RAW or
    JPG only, NOT BOTH
-
-   DATABASE "imageExtension" FIELD MUST MATCH CAMERA FILE EXTENSION
 
    """
    # Capture image from gPhoto2 camera
@@ -21,6 +20,11 @@ def capture_gphoto2_camera(camera_parameters, filepath, verbose=False):
       sys.stdout.flush()
    camera_filepath = \
       camera_parameters['connection'].capture(gp.GP_CAPTURE_IMAGE)
+
+   # Add extension to the basename to match the image file on the
+   # camera's SD card
+   extension = os.path.splitext(camera_filepath.name)[1].lower()
+   filepath = basename + extension
 
    # Extract image from the camera's SD card and save to local disk
    if verbose:

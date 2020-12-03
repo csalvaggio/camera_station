@@ -308,18 +308,19 @@ while True:
                   time.sleep(1)
                   continue
 
-            # Form the current filename for saving the image
+            # Form the current basename for saving the image (this is
+            # the basename, no extension, the extension is left to the
+            # specific capture method)
             basename = iso8601_time_string.replace(':', '-').replace('.', '-')
             basename += '_'
             basename += '{0}'.format(utils.get_mac_address('-'))
-            basename += '.{0}'.format(camera_parameters['imageExtension'])
-            local_filename = \
+            local_basename = \
                os.path.join(station_parameters['localDirectory'], basename)
 
             # Capture image and save it to the local disk
             camera.capture(station_parameters,
                            camera_parameters,
-                           local_filename,
+                           local_basename,
                            verbose=verbose)
 
             # Delay execution until the next second

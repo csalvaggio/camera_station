@@ -63,6 +63,17 @@ def upload_files_to_ftp_server(local_filenames,
          sys.stdout.write(msg)
          sys.stdout.flush()
          continue
+      except:
+         ftp.quit()
+         msg = '\n'
+         msg += '*** WARNING *** An unspecified error occurred during upload'
+         msg += '\n'
+         msg += '... aborting upload'
+         msg += '\n'
+         msg += '\n'
+         sys.stdout.write(msg)
+         sys.stdout.flush()
+         return False
 
       if verbose:
          msg = 'completed'

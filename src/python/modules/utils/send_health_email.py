@@ -57,8 +57,10 @@ def send_health_email(station_parameters,
    message += 'Sunrise:  {0}\n'.format(sunrise)
    message += 'Sunset:  {0}\n'.format(sunset)
    message += '\n'
-   message += 'Number of image files:  {0:,}\n'.format(len(filenames))
-   message += 'Storage used:  {0:,} [bytes]\n'.format(bytes_used)
+   message += 'Number of currently held image files on local storage:  '
+   message += '{0:,}\n'.format(len(filenames))
+   message += 'Local storage currently used:  '
+   message += '{0:,} [bytes]\n'.format(bytes_used)
    message += '\n'
    message += 'Most recent station parameters update:  '
    message += \

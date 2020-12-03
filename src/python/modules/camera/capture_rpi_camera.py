@@ -3,7 +3,10 @@ import sys
 
 import pydng.core
 
-def capture_rpi_camera(camera_parameters, filepath, verbose=False):
+def capture_rpi_camera(camera_parameters, basename, verbose=False):
+   # Add extension to the basename for storing the JPEG + RAW file
+   filepath = basename + '.jpg'
+
    # Capture image from Raspberry Pi camera
    if verbose:
       msg = '... acquiring image and saving to '
