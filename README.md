@@ -82,26 +82,26 @@ This repository contains the ``/home/pi`` folder for the Raspberry Pi appliance 
             hdmi_mode=82
 
         >**NOTE:**
-        
+        >
         >After booting the computer, if the display in "VNC Viewer" is not the proper/desired size, configure as follows
-
+        >
         >* Pi > Preferences > Screen Configuration
-        
+        >
         >In the *Screen Layout Editor* ...
-        
+        >
         >* Configure > Screens > HDMI-1 > Resolution > 1920x1080
         >* Configure > Apply
-
+        >
         >for the new resolution to take effect immediately.
 
         If it is still mounted, eject your SD card making sure you eject all partitions (under macOS you may use the ``diskutil`` command, *e.g.* ``diskutil umountDisk /dev/disk2`` where ``/dev/disk2`` is the name for the mounted volume)
-        
+
 * Insert SD card, and boot the Raspberry Pi
 
 * Enable Raspberry Pi camera
 
         sudo raspi-config
-    
+
     * Interface Options > Pi Camera > Yes
 
    Press "Ok", "Finish", and reboot the Raspberry Pi.
@@ -185,9 +185,6 @@ This repository contains the ``/home/pi`` folder for the Raspberry Pi appliance 
 
         * * * * * pkill -f gvfs-gphoto2-volume-monitor
         * * * * * pkill -f gvfsd-gphoto2
-
-
-
 
 * If the Verizon Wireless USB730L modem is available, plug it in, and disable the onboard WiFi interface by editing the ``/boot/config.txt`` file and adding (or uncommenting) the following line
 
