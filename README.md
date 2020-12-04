@@ -81,18 +81,18 @@ This repository contains the ``/home/pi`` folder for the Raspberry Pi appliance 
             hdmi_group=2
             hdmi_mode=82
 
-        **NOTE:**
+        >**NOTE:**
         
-        After booting the computer, if the display in "VNC Viewer" is not the proper/desired size, configure as follows
+        >After booting the computer, if the display in "VNC Viewer" is not the proper/desired size, configure as follows
 
-        * Pi > Preferences > Screen Configuration
+        >* Pi > Preferences > Screen Configuration
         
-        In the *Screen Layout Editor* ...
+        >In the *Screen Layout Editor* ...
         
-        * Configure > Screens > HDMI-1 > Resolution > 1920x1080
-        * Configure > Apply
+        >* Configure > Screens > HDMI-1 > Resolution > 1920x1080
+        >* Configure > Apply
 
-        for the new resolution to take effect immediately.
+        >for the new resolution to take effect immediately.
 
         If it is still mounted, eject your SD card making sure you eject all partitions (under macOS you may use the ``diskutil`` command, *e.g.* ``diskutil umountDisk /dev/disk2`` where ``/dev/disk2`` is the name for the mounted volume)
         
