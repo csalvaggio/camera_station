@@ -102,7 +102,7 @@ This repository contains the ``/home/pi`` folder for the Raspberry Pi appliance 
 
         sudo raspi-config
     
-    * Interface Options > P1 Camera > Yes
+    * Interface Options > Pi Camera > Yes
 
    Press "Ok", "Finish", and reboot the Raspberry Pi.
 
@@ -135,19 +135,11 @@ This repository contains the ``/home/pi`` folder for the Raspberry Pi appliance 
         cd PyDNG
         sudo pip3 install src/.
 
-* Install MariaDB (mySQL)
-
-    Follow these [instructions](https://pimylifeup.com/raspberry-pi-mysql/)
-
-* Install pysftp module
-
-        sudo pip install pysftp
-
 * Install ftp
 
         sudo apt-get install ftp
 
-* Prioritize the order of precedence for the network interfaces
+* Prioritize the order of precedence for the network interfaces (THIS MAY NOT BE NECESSARY IF THE WIFI INTERFACE IS DISABLED AS DESCRIBED BELOW)
 
     Edit ``/etc/dhcpcd.conf`` and add these lines, the lower the number, the higher prioity that is given to that interface
 
@@ -197,7 +189,7 @@ This repository contains the ``/home/pi`` folder for the Raspberry Pi appliance 
 
 
 
-* To disable the onboard WiFi interface, edit the ``/boot/config.txt`` file and add (or uncomment) the following line
+* If the Verizon Wireless USB730L modem is available, plug it in, and disable the onboard WiFi interface by editing the ``/boot/config.txt`` file and adding (or uncommenting) the following line
 
         # Uncomment this to disable the onboard WiFi
         dtoverlay=disable-wifi
