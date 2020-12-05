@@ -1,5 +1,6 @@
 from .db_connect import db_connect
 from .get_station_parameters import get_station_parameters
+from .get_hardware_parameters import get_hardware_parameters
 from .get_hourly_parameters import get_hourly_parameters
 from .get_rpi_camera_parameters import get_rpi_camera_parameters
 from .get_gphoto2_camera_parameters import get_gphoto2_camera_parameters

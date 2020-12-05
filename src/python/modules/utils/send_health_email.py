@@ -10,6 +10,7 @@ import utils
 def send_health_email(station_parameters,
                       station_parameters_pickup_successful=False,
                       hourly_parameters_pickup_successful=False,
+                      hardware_parameters_pickup_successful=False,
                       upload_successful=False):
 
    # Get the hostname
@@ -46,9 +47,12 @@ def send_health_email(station_parameters,
       message += 'To: {0}\n'.format(r)
    else:
       message += 'To: {0}\n'.format(station_parameters['healthEmailReceivers'])
-   message += 'Subject: Daily Health Message ({0})\n'.format(mac_address)
+   message += 'Subject: Daily Health Message '
+   message += '({0}) '.format(mac_address)
+   message += '[{0}]\n'.format(station_parameters['stationName'])
    message += '\n'
    message += 'Hostname:  {0}\n'.format(hostname)
+   message += 'Station name:  {0}\n'.format(station_parameters['stationName'])
    message += 'MAC:  {0}\n'.format(mac_address)
    message += 'IP address:  {0}\n'.format(ip_address)
    message += '\n'
@@ -68,6 +72,9 @@ def send_health_email(station_parameters,
    message += 'Most recent hourly parameters update:  '
    message += \
       'SUCCESS\n' if hourly_parameters_pickup_successful else 'FAILED\n'
+   message += 'Most recent hardware parameters update:  '
+   message += \
+      'SUCCESS\n' if hardware_parameters_pickup_successful else 'FAILED\n'
    message += '\n'
    message += 'Most recent file upload attempt:  '
    message += \
@@ -117,6 +124,7 @@ if __name__ == '__main__':
    import utils
 
    station_parameters = {}
+   station_parameters['stationName'] = 'cameraXXX'
    station_parameters['longitude'] = -77.6088
    station_parameters['latitude'] = 43.1566
    station_parameters['localDirectory'] = os.path.expanduser('~')
@@ -126,6 +134,7 @@ if __name__ == '__main__':
    station_parameters['smtpServer'] = 'mail.cis.rit.edu'
 
    utils.send_health_email(station_parameters,
+                           True,
                            True,
                            True,
                            True)

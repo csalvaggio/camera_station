@@ -53,6 +53,7 @@ while True:
    if dump_station_parameters_database:
       station_parameters = database.get_station_parameters(verbose=True)
       hourly_parameters = database.get_hourly_parameters(verbose=True)
+      hardware_parameters = database.get_hardware_parameters(verbose=True)
       sys.exit()
    else:
       if verbose:
@@ -100,6 +101,25 @@ while True:
             sys.stdout.flush()
             hourly_parameters = previous_hourly_parameters
 
+      hardware_parameters = database.get_hardware_parameters()
+      if hardware_parameters:
+         hardware_parameters_pickup_successful = True
+         previous_hardware_parameters = hardware_parameters
+      else:
+         hardware_parameters_pickup_successful = False
+         if initial_startup:
+            msg = '... exiting'
+            msg += '\n'
+            sys.stderr.write(msg)
+            sys.stderr.flush()
+            sys.exit()
+         else:
+            msg = '... using previous hardware parameters'
+            msg += '\n'
+            sys.stdout.write(msg)
+            sys.stdout.flush()
+            hardware_parameters = previous_hardware_parameters
+
    # Parse the database boolean parameters that need language-specific
    # interpretation
    if station_parameters['skipEvening'] == 'true':
@@ -110,6 +130,34 @@ while True:
    # Convert health e-mail receivers from a string to a list
    receivers = station_parameters['healthEmailReceivers']
    station_parameters['healthEmailReceivers'] = receivers.split('|')
+
+   # Organize hardware information into a device-specific dictionary
+   hardware = {}
+   mac_address = utils.get_mac_address('-')
+   try:
+      index = hardware_parameters['macAddress'].index(mac_address)
+      hardware['station_name'] = hardware_parameters['stationName'][index]
+      hardware['interface_name'] = hardware_parameters['interfaceName'][index]
+      hardware['mac_address'] = mac_address
+      hardware['ipv4_address'] = hardware_parameters['ipv4Address'][index]
+      hardware['dns_name'] = hardware_parameters['dnsName'][index]
+      hardware['port_number'] = hardware_parameters['portNumber'][index]
+      hardware['phone_number'] = hardware_parameters['phoneNumber'][index]
+   except ValueError:
+      hardware = {}
+      hardware['station_name'] = None
+      hardware['interface_name'] = None
+      hardware['mac_address'] = mac_address
+      hardware['ipv4_address'] = None
+      hardware['dns_name'] = None
+      hardware['port_number'] = None
+      hardware['phone_number'] = None
+
+   # Share the station name with the station parameters' dictionary
+   if hardware['station_name']:
+      station_parameters['stationName'] = hardware['station_name']
+   else:
+      station_parameters['stationName'] = 'unknown'
 
    # Check that the output directory exists and it writable
    if verbose:
@@ -156,7 +204,8 @@ while True:
          sys.stdout.flush()
       utils.send_health_email(station_parameters,
                               station_parameters_pickup_successful,
-                              hourly_parameters_pickup_successful)
+                              hourly_parameters_pickup_successful,
+                              hardware_parameters_pickup_successful)
       if verbose:
          msg = '\n'
          sys.stdout.write(msg)
@@ -204,6 +253,7 @@ while True:
             utils.send_health_email(station_parameters,
                                     station_parameters_pickup_successful,
                                     hourly_parameters_pickup_successful,
+                                    hardware_parameters_pickup_successful,
                                     upload_successful)
             if verbose:
                msg = '\n'
@@ -313,7 +363,10 @@ while True:
             # specific capture method)
             basename = iso8601_time_string.replace(':', '-').replace('.', '-')
             basename += '_'
-            basename += '{0}'.format(utils.get_mac_address('-'))
+            if hardware['station_name']:
+               basename += hardware['station_name']
+            else:
+               basename += hardware['mac_address']
             local_basename = \
                os.path.join(station_parameters['localDirectory'], basename)
 
