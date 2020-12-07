@@ -1,7 +1,11 @@
 import picamera
 import time
 
+from set_parameters_for_rpi_camera import set_parameters_for_rpi_camera
+
 camera = picamera.PiCamera()
+
+set_parameters_for_rpi_camera(camera)
 
 try:
    print("Starting camera preview ...")

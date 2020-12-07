@@ -2,12 +2,14 @@ import picamera
 import pydng.core
 import time
 
+from set_parameters_for_rpi_camera import set_parameters_for_rpi_camera
+
 filename = '/home/pi/image.jpg'
 use_lossless_jpeg_compression = True
 
 camera = picamera.PiCamera()
 
-camera.resolution = camera.MAX_RESOLUTION
+set_parameters_for_rpi_camera(camera)
 
 time.sleep(5)
 

@@ -56,7 +56,10 @@ def send_health_email(station_parameters,
    message += 'MAC:  {0}\n'.format(mac_address)
    message += 'IP address:  {0}\n'.format(ip_address)
    message += '\n'
-   message += 'Battery voltage:  {0:.2f} [V]\n'.format(voltage)
+   if voltage:
+      message += 'Battery voltage:  {0:.2f} [V]\n'.format(voltage)
+   else:
+      message += 'Battery voltage:  n/a\n'
    message += '\n'
    message += 'Sunrise:  {0}\n'.format(sunrise)
    message += 'Sunset:  {0}\n'.format(sunset)
