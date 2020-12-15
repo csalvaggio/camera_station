@@ -20,9 +20,12 @@ def get_camera_config(camera):
 def set_camera_config(camera, config):
    c = camera.get_config()
    for category in config:
+      if category == 'other':
+         continue
       for item in config[category]:
          node = c.get_child_by_name(item)
-         node.set_value(config[category][item]['value'])
+         if not isinstance(config[category][item]['value'], type(None)):
+            node.set_value(config[category][item]['value'])
    camera.set_config(c)
 
 def print_camera_config(config):
@@ -72,17 +75,17 @@ if __name__ == '__main__':
    # iso <class 'str'>
    config['imgsettings']['iso']['value'] = '800'
    # whitebalance <class 'str'>
-   config['imgsettings']['whitebalance']['value'] = 'Daylight'
+   #config['imgsettings']['whitebalance']['value'] = 'Daylight'
    # autoexposuremode <class 'str'>
    config['capturesettings']['autoexposuremode']['value'] = 'Manual'
    # picturestyle <class 'str'>
-   config['capturesettings']['picturestyle']['value'] = 'Landscape'
+   #config['capturesettings']['picturestyle']['value'] = 'Landscape'
    # aperture <class 'str'>
    config['capturesettings']['aperture']['value'] = '8'
    # shutterspeed <class 'str'>
    config['capturesettings']['shutterspeed']['value'] = '1/350'
    # meteringmode <class 'str'>
-   config['capturesettings']['meteringmode']['value'] = 'Spot'
+   #config['capturesettings']['meteringmode']['value'] = 'Spot'
    set_camera_config(camera, config)
 
    msg = separator
@@ -124,17 +127,17 @@ if __name__ == '__main__':
    # iso <class 'str'>
    config['imgsettings']['iso']['value'] = '100'
    # whitebalance <class 'str'>
-   config['imgsettings']['whitebalance']['value'] = 'Auto'
+   #config['imgsettings']['whitebalance']['value'] = 'Auto'
    # autoexposuremode <class 'str'>
    config['capturesettings']['autoexposuremode']['value'] = 'AV'
    # picturestyle <class 'str'>
-   config['capturesettings']['picturestyle']['value'] = 'Standard'
+   #config['capturesettings']['picturestyle']['value'] = 'Standard'
    # aperture <class 'str'>
    config['capturesettings']['aperture']['value'] = '4'
    # shutterspeed <class 'str'>
    config['capturesettings']['shutterspeed']['value'] = 'auto'
    # meteringmode <class 'str'>
-   config['capturesettings']['meteringmode']['value'] = 'Evaluative'
+   #config['capturesettings']['meteringmode']['value'] = 'Evaluative'
    set_camera_config(camera, config)
 
    msg = separator

@@ -21,7 +21,8 @@ def get_gphoto2_camera_parameters(verbose=False):
                 'pictureStyle',
                 'aperture',
                 'shutterSpeed',
-                'meterMode')
+                'meterMode',
+                'configurable')
 
       # Build the query
       query = 'SELECT '

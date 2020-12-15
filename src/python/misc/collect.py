@@ -122,7 +122,7 @@ while True:
 
    # Parse the database boolean parameters that need language-specific
    # interpretation
-   if station_parameters['skipEvening'] == 'true':
+   if station_parameters['skipEvening'].lower() == 'true':
       station_parameters['skipEvening'] = True
    else:
       station_parameters['skipEvening'] = False

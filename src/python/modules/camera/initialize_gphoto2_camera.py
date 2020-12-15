@@ -6,7 +6,7 @@ import gphoto2 as gp
 import camera
 import database
 
-def initialize_gphoto2_camera(station_parameters, verbose=False):
+def initialize_gphoto2_camera(verbose=False):
    # Pick up the camera parameters from the appropriate database
    if verbose:
       msg = 'Picking up the latest gPhoto2 camera '
@@ -15,6 +15,13 @@ def initialize_gphoto2_camera(station_parameters, verbose=False):
       sys.stdout.write(msg)
       sys.stdout.flush()
    parameters = database.get_gphoto2_camera_parameters()
+
+   # Parse the database boolean parameters that need language-specific
+   # interpretation
+   if parameters['configurable'].lower() == 'true':
+      parameters['configurable'] = True
+   else:
+      parameters['configurable'] = False
 
    if parameters:
       # Connect to and initialize the gPhoto2 camera
@@ -59,7 +66,7 @@ def initialize_gphoto2_camera(station_parameters, verbose=False):
          msg += '\n'
          sys.stdout.write(msg)
          sys.stdout.flush()
-      camera.set_parameters_for_gphoto2_camera(station_parameters, parameters)
+      camera.set_parameters_for_gphoto2_camera(parameters)
 
       return parameters
 

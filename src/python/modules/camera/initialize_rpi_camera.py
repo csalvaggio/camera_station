@@ -6,7 +6,7 @@ import picamera
 import camera
 import database
 
-def initialize_rpi_camera(station_parameters, verbose=False):
+def initialize_rpi_camera(verbose=False):
    # Pick up the camera parameters from the appropriate database
    if verbose:
       msg = 'Picking up the latest Raspberry Pi camera '
@@ -39,7 +39,7 @@ def initialize_rpi_camera(station_parameters, verbose=False):
          msg += '\n'
          sys.stdout.write(msg)
          sys.stdout.flush()
-      camera.set_parameters_for_rpi_camera(station_parameters, parameters)
+      camera.set_parameters_for_rpi_camera(parameters)
 
       # Warmup the Raspberry Pi camera
       for second in range(parameters['secondsToWarmup']):

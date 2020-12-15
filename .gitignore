@@ -10,6 +10,7 @@
 .my.cnf
 .pki
 .pp_backup
+.python_history
 .ssh
 .vim
 .viminfo

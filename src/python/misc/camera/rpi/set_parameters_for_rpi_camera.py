@@ -89,9 +89,3 @@ def set_parameters_for_rpi_camera(camera):
       sys.stderr.write(msg)
       sys.stderr.flush()
       sys.exit()
-
-
-
-
-
-

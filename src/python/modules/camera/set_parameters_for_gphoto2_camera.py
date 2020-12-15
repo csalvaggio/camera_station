@@ -20,57 +20,58 @@ def set_config(config, parameters, parameter, field_name, error_message):
       raise ValueError(error_message)
 
 
-def set_parameters_for_gphoto2_camera(station_parameters, parameters):
+def set_parameters_for_gphoto2_camera(parameters):
    if parameters['connection']:
-      config = parameters['connection'].get_config()
+      if parameters['configurable']:
+         config = parameters['connection'].get_config()
 
-      parameter = 'imageformat'
-      field_name = 'imageFormat'
-      error_message = \
-         'Specified image format is not a valid option for this camera'
-      set_config(config, parameters, parameter, field_name, error_message)
+         parameter = 'imageformat'
+         field_name = 'imageFormat'
+         error_message = \
+            'Specified image format is not a valid option for this camera'
+         set_config(config, parameters, parameter, field_name, error_message)
 
-      parameter = 'iso'
-      field_name = 'ISO'
-      error_message = \
-         'Specified ISO is not a valid option for this camera'
-      set_config(config, parameters, parameter, field_name, error_message)
+         parameter = 'iso'
+         field_name = 'ISO'
+         error_message = \
+            'Specified ISO is not a valid option for this camera'
+         set_config(config, parameters, parameter, field_name, error_message)
 
-      parameter = 'whitebalance'
-      field_name = 'awbMode'
-      error_message = \
-         'Specified white balance is not a valid option for this camera'
-      set_config(config, parameters, parameter, field_name, error_message)
+         parameter = 'whitebalance'
+         field_name = 'awbMode'
+         error_message = \
+            'Specified white balance is not a valid option for this camera'
+         set_config(config, parameters, parameter, field_name, error_message)
 
-      parameter = 'autoexposuremode'
-      field_name = 'exposureMode'
-      error_message = \
-         'Specified auto exposure mode is not a valid option for this camera'
-      set_config(config, parameters, parameter, field_name, error_message)
+         parameter = 'autoexposuremode'
+         field_name = 'exposureMode'
+         error_message = \
+            'Specified auto exposure mode is not a valid option for this camera'
+         set_config(config, parameters, parameter, field_name, error_message)
 
-      parameter = 'picturestyle'
-      field_name = 'pictureStyle'
-      error_message = \
-         'Specified picture style is not a valid option for this camera'
-      set_config(config, parameters, parameter, field_name, error_message)
+         parameter = 'picturestyle'
+         field_name = 'pictureStyle'
+         error_message = \
+            'Specified picture style is not a valid option for this camera'
+         set_config(config, parameters, parameter, field_name, error_message)
 
-      parameter = 'aperture'
-      field_name = 'aperture'
-      error_message = \
-         'Specified aperture (F-stop) is not a valid option for this camera'
-      set_config(config, parameters, parameter, field_name, error_message)
+         parameter = 'aperture'
+         field_name = 'aperture'
+         error_message = \
+            'Specified aperture (F-stop) is not a valid option for this camera'
+         set_config(config, parameters, parameter, field_name, error_message)
 
-      parameter = 'shutterspeed'
-      field_name = 'shutterSpeed'
-      error_message = \
-         'Specified shutter speed is not a valid option for this camera'
-      set_config(config, parameters, parameter, field_name, error_message)
+         parameter = 'shutterspeed'
+         field_name = 'shutterSpeed'
+         error_message = \
+            'Specified shutter speed is not a valid option for this camera'
+         set_config(config, parameters, parameter, field_name, error_message)
 
-      parameter = 'meteringmode'
-      field_name = 'meterMode'
-      error_message = \
-         'Specified metering mode is not a valid option for this camera'
-      set_config(config, parameters, parameter, field_name, error_message)
+         parameter = 'meteringmode'
+         field_name = 'meterMode'
+         error_message = \
+            'Specified metering mode is not a valid option for this camera'
+         set_config(config, parameters, parameter, field_name, error_message)
 
    else:
       msg = '*** ERROR *** gPhoto2 camera object not defined'

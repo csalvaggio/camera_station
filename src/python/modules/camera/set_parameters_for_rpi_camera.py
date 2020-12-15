@@ -2,7 +2,7 @@ import sys
 
 import picamera
 
-def set_parameters_for_rpi_camera(station_parameters, parameters):
+def set_parameters_for_rpi_camera(parameters):
    if parameters['connection']:
       # brightness [0, 100]
       if parameters['brightness'] < 0 or parameters['brightness'] > 100:
