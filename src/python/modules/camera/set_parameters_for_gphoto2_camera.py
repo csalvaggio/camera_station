@@ -20,6 +20,10 @@ def set_config(config, parameters, parameter, field_name, error_message):
       raise ValueError(error_message)
 
 
+##############################   IMPORTANT NOTE   ##############################
+#   Parameters that are commented out are available on the Canon EOS Rebel
+#   Xsi (450D) but not available on the Canon EOS M100
+################################################################################
 def set_parameters_for_gphoto2_camera(parameters):
    if parameters['connection']:
       if parameters['configurable']:
@@ -37,11 +41,11 @@ def set_parameters_for_gphoto2_camera(parameters):
             'Specified ISO is not a valid option for this camera'
          set_config(config, parameters, parameter, field_name, error_message)
 
-         parameter = 'whitebalance'
-         field_name = 'awbMode'
-         error_message = \
-            'Specified white balance is not a valid option for this camera'
-         set_config(config, parameters, parameter, field_name, error_message)
+         #parameter = 'whitebalance'
+         #field_name = 'awbMode'
+         #error_message = \
+         #   'Specified white balance is not a valid option for this camera'
+         #set_config(config, parameters, parameter, field_name, error_message)
 
          parameter = 'autoexposuremode'
          field_name = 'exposureMode'
@@ -49,11 +53,11 @@ def set_parameters_for_gphoto2_camera(parameters):
             'Specified auto exposure mode is not a valid option for this camera'
          set_config(config, parameters, parameter, field_name, error_message)
 
-         parameter = 'picturestyle'
-         field_name = 'pictureStyle'
-         error_message = \
-            'Specified picture style is not a valid option for this camera'
-         set_config(config, parameters, parameter, field_name, error_message)
+         #parameter = 'picturestyle'
+         #field_name = 'pictureStyle'
+         #error_message = \
+         #   'Specified picture style is not a valid option for this camera'
+         #set_config(config, parameters, parameter, field_name, error_message)
 
          parameter = 'aperture'
          field_name = 'aperture'
@@ -67,11 +71,11 @@ def set_parameters_for_gphoto2_camera(parameters):
             'Specified shutter speed is not a valid option for this camera'
          set_config(config, parameters, parameter, field_name, error_message)
 
-         parameter = 'meteringmode'
-         field_name = 'meterMode'
-         error_message = \
-            'Specified metering mode is not a valid option for this camera'
-         set_config(config, parameters, parameter, field_name, error_message)
+         #parameter = 'meteringmode'
+         #field_name = 'meterMode'
+         #error_message = \
+         #   'Specified metering mode is not a valid option for this camera'
+         #set_config(config, parameters, parameter, field_name, error_message)
 
    else:
       msg = '*** ERROR *** gPhoto2 camera object not defined'

@@ -223,6 +223,9 @@ while True:
 
    try:
       while True:
+         # Slow down the program to reduce power consumption
+         time.sleep(station_parameters['cameraSyncTolerance'])
+
          # Get current time [s] (UTC)
          iso8601_time_string = \
             clock.iso8601_time_string_using_computer_clock()
@@ -240,6 +243,7 @@ while True:
                sys.stdout.write(msg)
                sys.stdout.flush()
             camera.close(station_parameters, camera_parameters)
+            time.sleep(15)
             break
 
          # If it is the scheduled time, send a system health e-mail

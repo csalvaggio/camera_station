@@ -15,6 +15,7 @@ def get_station_parameters(verbose=False):
       # Establish the list of fields to query
       fields = ('ID',
                 'cameraType',
+                'cameraSyncTolerance',
                 'latitude',
                 'longitude',
                 'skipEvening',
