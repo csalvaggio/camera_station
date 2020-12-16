@@ -4,12 +4,12 @@ import camera
 
 def capture(station_parameters, camera_parameters, filepath, verbose=False):
    # Raspberry Pi camera
-   if station_parameters['cameraType'] == 'rpi':
+   if station_parameters['cameraType'].lower() == 'rpi':
       camera.capture_rpi_camera(camera_parameters,
                                 filepath,
                                 verbose=verbose)
    # gPhoto2 camera
-   elif station_parameters['cameraType'] == 'gphoto2':
+   elif station_parameters['cameraType'].lower() == 'gphoto2':
       camera.capture_gphoto2_camera(camera_parameters,
                                     filepath,
                                     verbose=verbose)

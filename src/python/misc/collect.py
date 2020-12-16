@@ -239,10 +239,9 @@ while True:
             if verbose:
                msg = 'Turning off the camera ...'
                msg += '\n'
-               msg += '\n'
                sys.stdout.write(msg)
                sys.stdout.flush()
-            camera.close(station_parameters, camera_parameters)
+            camera.close(station_parameters, camera_parameters, verbose=verbose)
             time.sleep(15)
             break
 
@@ -393,7 +392,7 @@ while True:
          msg += '\n'
          sys.stdout.write(msg)
          sys.stdout.flush()
-      camera.close(station_parameters, camera_parameters)
+      camera.close(station_parameters, camera_parameters, verbose=verbose)
 
       # Exit the script
       if verbose:

@@ -3,11 +3,11 @@ import sys
 import camera
 
 def initialize(station_parameters, verbose=False):
-   if station_parameters['cameraType'] == 'rpi':
+   if station_parameters['cameraType'].lower() == 'rpi':
       # Raspberry Pi camera
       parameters = \
          camera.initialize_rpi_camera(verbose=verbose)
-   elif station_parameters['cameraType'] == 'gphoto2':
+   elif station_parameters['cameraType'].lower() == 'gphoto2':
       # gPhoto2 camera
       parameters = \
          camera.initialize_gphoto2_camera(verbose=verbose)
