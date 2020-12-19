@@ -35,3 +35,5 @@ def capture_rpi_camera(camera_parameters, basename, verbose=False):
       msg += '\n'
       sys.stdout.write(msg)
       sys.stdout.flush()
+
+   return 1

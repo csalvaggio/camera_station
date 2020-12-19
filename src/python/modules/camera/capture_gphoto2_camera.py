@@ -18,8 +18,16 @@ def capture_gphoto2_camera(camera_parameters, basename, verbose=False):
       msg +=  '\n'
       sys.stdout.write(msg)
       sys.stdout.flush()
-   camera_filepath = \
-      camera_parameters['connection'].capture(gp.GP_CAPTURE_IMAGE)
+   try:
+      camera_filepath = \
+         camera_parameters['connection'].capture(gp.GP_CAPTURE_IMAGE)
+   except:
+      msg = '... gPhoto2 capture unsuccessful, try power cycling the camera'
+      msg += '\n'
+      msg += '\n'
+      sys.stdout.write(msg)
+      sys.stdout.flush()
+      return 0
 
    # Add extension to the basename to match the image file on the
    # camera's SD card
@@ -59,3 +67,5 @@ def capture_gphoto2_camera(camera_parameters, basename, verbose=False):
    # Clean up memory
    del camera_file
    del camera_filepath
+
+   return 1

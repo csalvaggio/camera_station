@@ -374,10 +374,11 @@ while True:
                os.path.join(station_parameters['localDirectory'], basename)
 
             # Capture image and save it to the local disk
-            camera.capture(station_parameters,
-                           camera_parameters,
-                           local_basename,
-                           verbose=verbose)
+            capture_status = \
+               camera.capture(station_parameters,
+                              camera_parameters,
+                              local_basename,
+                              verbose=verbose)
 
             # Delay execution until the next second
             time.sleep(1)
