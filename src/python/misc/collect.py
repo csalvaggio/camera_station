@@ -383,6 +383,41 @@ while True:
             # Delay execution until the next second
             time.sleep(1)
 
+            # Check the capture status and reset camera if necessary
+            if capture_status == 0:
+               if verbose:
+                  msg = 'Attempting a camera re-initialization ...'
+                  msg += '\n'
+                  sys.stdout.write(msg)
+                  sys.stdout.flush()
+
+               # Close the camera connection
+               camera.close(station_parameters,
+                            camera_parameters,
+                            verbose=verbose)
+
+               # Power cycle the camera
+               if verbose:
+                  msg = 'Power cycling the camera ...'
+                  msg += ' (NOT IMPLEMENTED AT THIS TIME)'
+                  msg += '\n'
+                  msg += '\n'
+                  sys.stdout.write(msg)
+                  sys.stdout.flush()
+               pass
+
+               # Re-initialize the camera
+               camera_parameters = \
+                  camera.initialize(station_parameters, verbose=verbose)
+
+               if verbose:
+                  msg = '\n'
+                  msg += 'Waiting for next trigger ...'
+                  msg += '\n'
+                  msg += '\n'
+                  sys.stdout.write(msg)
+                  sys.stdout.flush()
+
    except KeyboardInterrupt:
       # Close the camera connection
       msg = '\n'
