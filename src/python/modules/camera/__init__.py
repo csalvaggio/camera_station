@@ -7,3 +7,6 @@ from .capture import capture
 from .capture_rpi_camera import capture_rpi_camera
 from .capture_gphoto2_camera import capture_gphoto2_camera
 from .close import close
+from .power_cycle import power_cycle
+from .power_cycle_rpi_camera import power_cycle_rpi_camera
+from .power_cycle_gphoto2_camera import power_cycle_gphoto2_camera

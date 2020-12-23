@@ -5,7 +5,7 @@ def close(station_parameters, camera_parameters, verbose=False):
       # Raspberry Pi camera
       camera_parameters['connection'].close()
       if verbose:
-         msg = 'Raspberry Pi camera is turned off ...'
+         msg = 'Raspberry Pi camera connection is closed ...'
          msg += '\n'
          msg += '\n'
          sys.stdout.write(msg)
@@ -14,7 +14,7 @@ def close(station_parameters, camera_parameters, verbose=False):
       # gPhoto2 camera
       camera_parameters['connection'].exit()
       if verbose:
-         msg = 'gPhoto2 camera is turned off ...'
+         msg = 'gPhoto2 camera connection is closed ...'
          msg += '\n'
          msg += '\n'
          sys.stdout.write(msg)

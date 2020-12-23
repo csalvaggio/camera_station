@@ -399,12 +399,17 @@ while True:
                # Power cycle the camera
                if verbose:
                   msg = 'Power cycling the camera ...'
-                  msg += ' (NOT IMPLEMENTED AT THIS TIME)'
-                  msg += '\n'
                   msg += '\n'
                   sys.stdout.write(msg)
                   sys.stdout.flush()
-               pass
+               camera.power_cycle(station_parameters,
+                                  shutdown_duration=15,
+                                  startup_duration=15,
+                                  verbose=verbose)
+               if verbose:
+                  msg = '\n'
+                  sys.stdout.write(msg)
+                  sys.stdout.flush()
 
                # Re-initialize the camera
                camera_parameters = \
