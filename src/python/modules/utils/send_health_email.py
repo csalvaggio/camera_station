@@ -40,13 +40,13 @@ def send_health_email(station_parameters,
    voltmeter.close()
 
    # Form the message
-   message = 'From: {0}\n'.format(station_parameters['healthEmailSender'])
-   if type(station_parameters['healthEmailReceivers']) is list:
-      r = str(station_parameters['healthEmailReceivers'])[1:-1]
+   message = 'From: {0}\n'.format(station_parameters['emailSender'])
+   if type(station_parameters['emailReceivers']) is list:
+      r = str(station_parameters['emailReceivers'])[1:-1]
       r = r.replace("'", "").replace('"', '')
       message += 'To: {0}\n'.format(r)
    else:
-      message += 'To: {0}\n'.format(station_parameters['healthEmailReceivers'])
+      message += 'To: {0}\n'.format(station_parameters['emailReceivers'])
    message += 'Subject: Daily Health Message '
    message += '({0}) '.format(mac_address)
    message += '[{0}]\n'.format(station_parameters['stationName'])
@@ -106,8 +106,8 @@ def send_health_email(station_parameters,
       return
 
    try:
-      smtp.sendmail(station_parameters['healthEmailSender'],
-                    station_parameters['healthEmailReceivers'],
+      smtp.sendmail(station_parameters['emailSender'],
+                    station_parameters['emailReceivers'],
                     message)
    except smtplib.SMTPException:
       msg = '*** WARNING *** Unable to send daily health message'
@@ -131,9 +131,9 @@ if __name__ == '__main__':
    station_parameters['longitude'] = -77.6088
    station_parameters['latitude'] = 43.1566
    station_parameters['localDirectory'] = os.path.expanduser('~')
-   station_parameters['healthEmailSender'] = 'salvaggio@cis.rit.edu'
+   station_parameters['emailSender'] = 'salvaggio@cis.rit.edu'
    receivers = 'salvaggio@cis.rit.edu|carl.salvaggio@rit.edu'
-   station_parameters['healthEmailReceivers'] = receivers.split('|')
+   station_parameters['emailReceivers'] = receivers.split('|')
    station_parameters['smtpServer'] = 'mail.cis.rit.edu'
 
    utils.send_health_email(station_parameters,

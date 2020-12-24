@@ -127,9 +127,9 @@ while True:
    else:
       station_parameters['skipEvening'] = False
 
-   # Convert health e-mail receivers from a string to a list
-   receivers = station_parameters['healthEmailReceivers']
-   station_parameters['healthEmailReceivers'] = receivers.split('|')
+   # Convert e-mail receivers from a string to a list
+   receivers = station_parameters['emailReceivers']
+   station_parameters['emailReceivers'] = receivers.split('|')
 
    # Organize hardware information into a device-specific dictionary
    hardware = {}
@@ -414,6 +414,14 @@ while True:
                # Re-initialize the camera
                camera_parameters = \
                   camera.initialize(station_parameters, verbose=verbose)
+
+               # Send a power cycle alert e-mail
+               if verbose:
+                  msg = 'Sending a power cycle alert e-mail ...'
+                  msg += '\n'
+                  sys.stdout.write(msg)
+                  sys.stdout.flush()
+               utils.send_power_cycle_email(station_parameters)
 
                if verbose:
                   msg = '\n'
