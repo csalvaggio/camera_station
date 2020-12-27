@@ -55,8 +55,10 @@ def upload_files_to_ftp_server(local_filenames,
          bytes_uploaded += os.path.getsize(local_filename)
       except ftplib.error_perm:
          msg = '\n'
-         msg += '*** WARNING *** A file with the same name already exists '
-         msg += 'on the server'
+         msg += '*** WARNING *** Permission error encountered'
+         msg += '\n'
+         msg += 'A file with the same name as the target may already exists or '
+         msg += 'you may not have permission to write to the target directory'
          msg += '\n'
          msg += '... moving on to the next file'
          msg += '\n'
