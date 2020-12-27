@@ -24,3 +24,5 @@ Desktop
 *.pyc
 __pycache__
 src/python/pkg/*
+*.SAVE
+*.ORIG
