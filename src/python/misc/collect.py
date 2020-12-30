@@ -314,6 +314,9 @@ while True:
                      msg += 'imagery in place ...'
                      msg += '\n'
                      msg += '\n'
+                     msg += 'Waiting for next trigger ...'
+                     msg += '\n'
+                     msg += '\n'
                      sys.stdout.write(msg)
                      sys.stdout.flush()
             time.sleep(1)

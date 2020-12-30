@@ -68,6 +68,17 @@ def upload_files_to_ftp_server(local_filenames,
          ftp.close()
          del ftp
          continue
+      except KeyboardInterrupt:
+         msg = '\n'
+         msg += '*** WARNING *** User initiated interrupt detected'
+         msg += '\n'
+         msg += '... aborting upload'
+         msg += '\n'
+         msg += '\n'
+         sys.stdout.write(msg)
+         sys.stdout.flush()
+         ftp.close()
+         return False
       except:
          msg = '\n'
          msg += '*** WARNING *** An unspecified error occurred during upload'
