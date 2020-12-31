@@ -11,7 +11,8 @@ def send_health_email(station_parameters,
                       station_parameters_pickup_successful=False,
                       hourly_parameters_pickup_successful=False,
                       hardware_parameters_pickup_successful=False,
-                      upload_successful=False):
+                      upload_successful=False,
+                      files_uploaded=0):
 
    # Get the hostname
    hostname = socket.gethostname()
@@ -56,18 +57,14 @@ def send_health_email(station_parameters,
    message += 'MAC:  {0}\n'.format(mac_address)
    message += 'IP address:  {0}\n'.format(ip_address)
    message += '\n'
+   message += 'Time:  {0}\n'.format(iso8601_time_string)
+   message += 'Sunrise:  {0}\n'.format(sunrise)
+   message += 'Sunset:  {0}\n'.format(sunset)
+   message += '\n'
    if voltage:
       message += 'Battery voltage:  {0:.2f} [V]\n'.format(voltage)
    else:
       message += 'Battery voltage:  n/a\n'
-   message += '\n'
-   message += 'Sunrise:  {0}\n'.format(sunrise)
-   message += 'Sunset:  {0}\n'.format(sunset)
-   message += '\n'
-   message += 'Number of currently held image files on local storage:  '
-   message += '{0:,}\n'.format(len(filenames))
-   message += 'Local storage currently used:  '
-   message += '{0:,} [bytes]\n'.format(bytes_used)
    message += '\n'
    message += 'Most recent station parameters update:  '
    message += \
@@ -81,7 +78,13 @@ def send_health_email(station_parameters,
    message += '\n'
    message += 'Most recent file upload attempt:  '
    message += \
-      'SUCCESS\n' if upload_successful else 'FAILED\n'
+      'SUCCESS ({0} files uploaded)\n'.format(files_uploaded) \
+      if upload_successful else 'FAILED\n'
+   message += '\n'
+   message += 'Number of images currently held on station\'s local storage: '
+   message += '{0:,}\n'.format(len(filenames))
+   message += 'Local storage currently used:  '
+   message += '{0:,} [bytes]\n'.format(bytes_used)
 
    # Send the message
    smtp = smtplib.SMTP()
@@ -140,4 +143,5 @@ if __name__ == '__main__':
                            True,
                            True,
                            True,
-                           True)
+                           True,
+                           10)

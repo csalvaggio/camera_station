@@ -47,6 +47,7 @@ dump_station_parameters_database = args.dump_station_parameters_database
 
 initial_startup = True
 upload_successful = False
+files_uploaded = 0
 
 while True:
    # Pick up the latest parameters from the databases
@@ -257,7 +258,8 @@ while True:
                                     station_parameters_pickup_successful,
                                     hourly_parameters_pickup_successful,
                                     hardware_parameters_pickup_successful,
-                                    upload_successful)
+                                    upload_successful,
+                                    files_uploaded)
             if verbose:
                msg = '\n'
                sys.stdout.write(msg)
@@ -319,6 +321,12 @@ while True:
                      msg += '\n'
                      sys.stdout.write(msg)
                      sys.stdout.flush()
+            # Record the number of files that were successfully uploaded
+            if upload_successful:
+               files_uploaded = len(local_filenames)
+            else:
+               files_uploaded = 0
+
             time.sleep(1)
             continue
 
