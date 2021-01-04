@@ -141,33 +141,43 @@ class Switch(object):
 
 if __name__ == '__main__':
 
+   import argparse
    import sys
    import time
 
    import power
 
-   try:
-      msg = 'Creating switch ...'
+   description = 'Switch (on/off) script'
+   parser = argparse.ArgumentParser(description=description)
+
+   help_message = 'desired state (ON|OFF) '
+   help_message += '[default is ON]'
+   parser.add_argument('-s', '--state',
+                       dest='desired_state',
+                       type=str,
+                       default='ON',
+                       help=help_message)
+
+   args = parser.parse_args()
+   desired_state = args.desired_state.upper()
+
+   if desired_state != 'ON' and desired_state != 'OFF':
+      msg = 'Invalid option for desired state: {0}'.format(desired_state)
+      msg += '\n'
+      msg += 'Exiting ...'
       msg += '\n'
       sys.stdout.write(msg)
-      switch = power.Switch(control_pin=21, load_connection='nc')
-      time.sleep(5)
+      sys.stdout.flush()
+      sys.exit()
 
-      while True:
-         if switch.state:
-            msg = 'Turning switch OFF'
-            msg += '\n'
-            sys.stdout.write(msg)
-            switch.position(0)
-         else:
-            msg = 'Turning switch ON'
-            msg += '\n'
-            sys.stdout.write(msg)
-            switch.position(1)
+   msg = 'Creating switch ...'
+   msg += '\n'
+   sys.stdout.write(msg)
+   switch = power.Switch(control_pin=21, load_connection='nc')
+   time.sleep(5)
 
-         time.sleep(5)
-
-   except KeyboardInterrupt:
-      msg = '\n'
-      sys.stdout.write(msg)
-      switch.close()
+   msg = 'Turning switch {0}'.format(desired_state)
+   msg += '\n'
+   sys.stdout.write(msg)
+   sys.stdout.flush()
+   switch.position(1) if desired_state == 'ON' else switch.position(0)

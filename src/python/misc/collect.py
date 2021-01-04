@@ -288,9 +288,10 @@ while True:
                      verbose=verbose,
                      report_stats=verbose)
                if verbose:
-                  msg = '\n'
-                  sys.stdout.write(msg)
-                  sys.stdout.flush()
+                  if upload_successful:
+                     msg = '\n'
+                     sys.stdout.write(msg)
+                     sys.stdout.flush()
             else:
                if verbose:
                   msg = '*** WARNING *** No daily imagery found for upload'

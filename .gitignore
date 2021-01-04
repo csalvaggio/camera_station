@@ -20,6 +20,7 @@
 .xsession-errors
 .xsession-errors.old
 Desktop
+tmp
 .pyhistory
 *.pyc
 __pycache__
