@@ -21,6 +21,7 @@ def upload_files_to_ftp_server(local_filenames,
       try:
          ftp = ftplib.FTP(target_host)
       except:
+         msg += '\n'
          msg = '*** WARNING *** Connection to FTP server could not be made'
          msg += '\n'
          msg += '... aborting upload'
@@ -35,6 +36,7 @@ def upload_files_to_ftp_server(local_filenames,
       try:
          ftp.cwd(target_directory)
       except:
+         msg += '\n'
          msg = '*** WARNING *** Could not change to target directory on the '
          msg += 'FTP server'
          msg += '\n'
