@@ -15,6 +15,9 @@ def send_power_cycle_sms(station_parameters):
    message += '\n'
    message += 'Station name: {0}\n'.format(station_parameters['stationName'])
 
+   # Truncate message to meet SMS standards (160 characters)
+   message = message[:160]
+
    # Send the message
    smtp = smtplib.SMTP()
    try:
