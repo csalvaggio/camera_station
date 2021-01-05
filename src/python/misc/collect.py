@@ -132,6 +132,10 @@ while True:
    receivers = station_parameters['emailReceivers']
    station_parameters['emailReceivers'] = receivers.split('|')
 
+   # Convert SMS receivers from a string to a list
+   receivers = station_parameters['smsReceivers']
+   station_parameters['smsReceivers'] = receivers.split('|')
+
    # Organize hardware information into a device-specific dictionary
    hardware = {}
    mac_address = utils.get_mac_address('-')
@@ -434,6 +438,14 @@ while True:
                   sys.stdout.write(msg)
                   sys.stdout.flush()
                utils.send_power_cycle_email(station_parameters)
+
+               # Send a power cycle alert SMS
+               if verbose:
+                  msg = 'Sending a power cycle alert SMS ...'
+                  msg += '\n'
+                  sys.stdout.write(msg)
+                  sys.stdout.flush()
+               utils.send_power_cycle_sms(station_parameters)
 
                if verbose:
                   msg = '\n'

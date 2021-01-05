@@ -3,4 +3,5 @@ from .get_ip_address import get_ip_address
 from .get_mac_address import get_mac_address
 from .send_health_email import send_health_email
 from .send_power_cycle_email import send_power_cycle_email
+from .send_power_cycle_sms import send_power_cycle_sms
 from .upload_files_to_ftp_server import upload_files_to_ftp_server

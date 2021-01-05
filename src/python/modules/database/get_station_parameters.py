@@ -24,6 +24,8 @@ def get_station_parameters(verbose=False):
                 'healthEmailHour',
                 'emailSender',
                 'emailReceivers',
+                'smsSender',
+                'smsReceivers',
                 'smtpServer',
                 'ftpServer',
                 'ftpDirectory',
