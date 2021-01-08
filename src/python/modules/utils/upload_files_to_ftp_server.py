@@ -7,6 +7,7 @@ def upload_files_to_ftp_server(local_filenames,
                                target_host,
                                target_directory,
                                verbose=False,
+                               delete_after_upload=False,
                                report_stats=False):
 
    try:
@@ -97,6 +98,14 @@ def upload_files_to_ftp_server(local_filenames,
          sys.stdout.write(msg)
          sys.stdout.flush()
 
+      if delete_after_upload:
+         if verbose:
+            msg = '... deleting uploaded file'
+            msg += '\n'
+            sys.stdout.write(msg)
+            sys.stdout.flush()
+         os.remove(local_filename)
+
    ftp.close()
 
    if report_stats:
@@ -121,13 +130,75 @@ def upload_files_to_ftp_server(local_filenames,
 
 
 if __name__ == '__main__':
+   import argparse
    import os
    import utils
 
+   # Defaults
    target_host = 'ftp.cis.rit.edu'
    target_directory = 'dirs/cnspci/incoming/doe/srnl/mdct2/jasper/images'
-
    local_directory = '.'
+
+   # Parse the command-line arguments
+   description = 'Upload files in a local directory to server using '
+   description += 'anonymous FTP'
+   parser = argparse.ArgumentParser(description=description)
+
+   help_message = 'verbose '
+   help_message += '[default is False]'
+   parser.add_argument('-v', '--verbose',
+                       dest='verbose',
+                       action='store_true',
+                       default=False,
+                       help=help_message)
+
+   help_message = 'delete local files after upload '
+   help_message += '[default is False]'
+   parser.add_argument('-d', '--delete',
+                       dest='delete_after_upload',
+                       action='store_true',
+                       default=False,
+                       help=help_message)
+
+   help_message = 'report upload statistics upon completion '
+   help_message += '[default is False]'
+   parser.add_argument('-r', '--report',
+                       dest='report_stats',
+                       action='store_true',
+                       default=False,
+                       help=help_message)
+
+   help_message = 'target host '
+   help_message += '[default is {0}]'.format(target_host)
+   parser.add_argument('-th', '--target-host',
+                       dest='target_host',
+                       type=str,
+                       default=target_host,
+                       help=help_message)
+
+   help_message = 'target directory '
+   help_message += '[default is {0}]'.format(target_directory)
+   parser.add_argument('-td', '--target-directory',
+                       dest='target_directory',
+                       type=str,
+                       default=target_directory,
+                       help=help_message)
+
+   help_message = 'local directory '
+   help_message += '[default is {0}]'.format(local_directory)
+   parser.add_argument('-ld', '--local-directory',
+                       dest='local_directory',
+                       type=str,
+                       default=local_directory,
+                       help=help_message)
+
+   args = parser.parse_args()
+   verbose = args.verbose
+   delete_after_upload = args.delete_after_upload
+   report_stats = args.report_stats
+   target_host = args.target_host
+   target_directory = args.target_directory
+   local_directory = args.local_directory
 
    local_directory_listing = sorted(os.listdir(local_directory))
    local_filenames = []
@@ -139,5 +210,6 @@ if __name__ == '__main__':
    utils.upload_files_to_ftp_server(local_filenames,
                                     target_host,
                                     target_directory,
-                                    verbose=True,
-                                    report_stats=True)
+                                    verbose=verbose,
+                                    delete_after_upload=delete_after_upload,
+                                    report_stats=report_stats)
