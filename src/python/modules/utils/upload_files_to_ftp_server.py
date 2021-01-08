@@ -9,6 +9,36 @@ def upload_files_to_ftp_server(local_filenames,
                                verbose=False,
                                report_stats=False):
 
+   try:
+      ftp = ftplib.FTP(target_host)
+   except:
+      msg += '\n'
+      msg = '*** WARNING *** Connection to FTP server could not be made'
+      msg += '\n'
+      msg += '... aborting upload'
+      msg += '\n'
+      msg += '\n'
+      sys.stdout.write(msg)
+      sys.stdout.flush()
+      return False
+
+   ftp.login()
+
+   try:
+      ftp.cwd(target_directory)
+   except:
+      msg += '\n'
+      msg = '*** WARNING *** Could not change to target directory on the '
+      msg += 'FTP server'
+      msg += '\n'
+      msg += '... aborting upload'
+      msg += '\n'
+      msg += '\n'
+      sys.stdout.write(msg)
+      sys.stdout.flush()
+      ftp.close()
+      return False
+
    files_uploaded = 0
    bytes_uploaded = 0
    start_time = time.perf_counter()
@@ -17,36 +47,6 @@ def upload_files_to_ftp_server(local_filenames,
          msg = 'Uploading {0} ... '.format(local_filename)
          sys.stdout.write(msg)
          sys.stdout.flush()
-
-      try:
-         ftp = ftplib.FTP(target_host)
-      except:
-         msg += '\n'
-         msg = '*** WARNING *** Connection to FTP server could not be made'
-         msg += '\n'
-         msg += '... aborting upload'
-         msg += '\n'
-         msg += '\n'
-         sys.stdout.write(msg)
-         sys.stdout.flush()
-         return False
-
-      ftp.login()
-
-      try:
-         ftp.cwd(target_directory)
-      except:
-         msg += '\n'
-         msg = '*** WARNING *** Could not change to target directory on the '
-         msg += 'FTP server'
-         msg += '\n'
-         msg += '... aborting upload'
-         msg += '\n'
-         msg += '\n'
-         sys.stdout.write(msg)
-         sys.stdout.flush()
-         ftp.close()
-         return False
 
       try:
          target_filename = os.path.basename(local_filename)
@@ -67,8 +67,6 @@ def upload_files_to_ftp_server(local_filenames,
          msg += '\n'
          sys.stdout.write(msg)
          sys.stdout.flush()
-         ftp.close()
-         del ftp
          continue
       except KeyboardInterrupt:
          msg = '\n'
@@ -99,8 +97,7 @@ def upload_files_to_ftp_server(local_filenames,
          sys.stdout.write(msg)
          sys.stdout.flush()
 
-      ftp.close()
-      del ftp
+   ftp.close()
 
    if report_stats:
       elapsed_time = time.perf_counter() - start_time
