@@ -17,6 +17,8 @@ def get_hardware_parameters(verbose=False):
                 'stationName',
                 'interfaceName',
                 'macAddress',
+                'imei',
+                'iccid',
                 'ipv4Address',
                 'dnsName',
                 'portNumber',
