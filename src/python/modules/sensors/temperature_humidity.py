@@ -1,15 +1,17 @@
 import sys
 import time
 
-import adafruit_dht
+#import adafruit_dht
+import sensors.adafruit
 
-def temperature_humidity(data_pin=20,
+def temperature_humidity(data_pin=14,
                          temperature_units='k',
                          timeout=10,
                          error_is_terminal=False,
                          verbose=False):
    try:
-      dht = adafruit_dht.DHT22(data_pin, use_pulseio=False)
+#      dht = adafruit_dht.DHT22(data_pin, use_pulseio=True)
+      dht = sensors.adafruit.adafruit_dht.DHT22(data_pin, use_pulseio=True)
    except:
       if error_is_terminal:
          msg = '*** ERROR *** '
@@ -110,10 +112,11 @@ def temperature_humidity(data_pin=20,
 if __name__ == '__main__':
 
    import sys
+   import time
 
    import sensors
 
-   data_pin = 20
+   data_pin = 14
    temperature_units = 'f'
    timeout = 10
    error_is_terminal = True
@@ -127,10 +130,10 @@ if __name__ == '__main__':
 
    if readings:
       temperature, humidity = readings
-      msg = 'Temperature: {0} '.format(temperature) 
+      msg = 'Temperature: {0:.1f} '.format(temperature) 
       msg += '[{0}]'.format(temperature_units.upper())
       msg += '\n'
-      msg += 'Humidity: {0} '.format(humidity) 
+      msg += 'Humidity: {0:.1f} '.format(humidity) 
       msg += '[%]'
       msg += '\n'
       sys.stdout.write(msg)

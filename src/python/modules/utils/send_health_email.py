@@ -5,6 +5,7 @@ import sys
 
 import battery
 import clock
+import sensors
 import utils
 
 def send_health_email(station_parameters,
@@ -40,6 +41,14 @@ def send_health_email(station_parameters,
    voltage = voltmeter.read(samples=16)
    voltmeter.close()
 
+   # Get the enclosure's interior environmental paramaters
+   readings = sensors.temperature_humidity(temperature_units='f')
+   if readings:
+      temperature, humidity = readings
+   else:
+      temperature = None
+      humidity = None
+
    # Form the message
    message = 'From: {0}\n'.format(station_parameters['emailSender'])
    if type(station_parameters['emailReceivers']) is list:
@@ -65,6 +74,15 @@ def send_health_email(station_parameters,
       message += 'Battery voltage:  {0:.2f} [V]\n'.format(voltage)
    else:
       message += 'Battery voltage:  n/a\n'
+   message += '\n'
+   if temperature:
+      message += 'Temperature:  {0:.1f} [F]\n'.format(temperature)
+   else:
+      message += 'Temperature:  n/a\n'
+   if humidity:
+      message += 'Humidity:  {0:.1f} [%]\n'.format(humidity)
+   else:
+      message += 'Humidity:  n/a\n'
    message += '\n'
    message += 'Most recent station parameters update:  '
    message += \
