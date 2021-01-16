@@ -74,8 +74,8 @@ def temperature_humidity(station_parameters,
       msg += ','
       msg += '{0:.1f}'.format(humidity)
       msg += '\n'
-      if os.path.isfile(temperature_humidity_log_filename):
-         f = open(temperature_humidity_log_filename, 'a')
+      if os.path.isfile(log_filename):
+         f = open(log_filename, 'a')
          f.write(msg)
          f.close()
 
