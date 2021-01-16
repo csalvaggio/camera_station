@@ -8,6 +8,8 @@ This repository contains the ``/home/pi`` folder for the Raspberry Pi appliance 
 * [Raspberry Pi High Quality Camera](https://www.raspberrypi.org/products/raspberry-pi-high-quality-camera/)
 * [GPhoto2 Compatible Camera](http://www.gphoto.org/proj/libgphoto2/support.php)
 * RIT-designed Raspberry Pi Voltmeter Board
+* [HiLetgo 5V 1-Channel Relay](http://www.hiletgo.com/ProductDetail/1958599.html)
+* [HiLetgo DHT22/AM2302 Digital Temperature And Humidity Sensor Module](http://www.hiletgo.com/ProductDetail/1952785.html)
 
 ## DEPENDENCIES
 * NumPy
@@ -15,6 +17,7 @@ This repository contains the ``/home/pi`` folder for the Raspberry Pi appliance 
 * picamera
 * [GPhoto2](http://www.gphoto.org)
 * [PyDNG](https://github.com/schoolpost/PyDNG)
+* digitalio
 
 ## INSTALLATION
 * Install the **Raspberry Pi OS Full** operating system on an SD card using one of the recommended methods
@@ -134,6 +137,34 @@ This repository contains the ``/home/pi`` folder for the Raspberry Pi appliance 
         git clone https://github.com/schoolpost/PyDNG.git
         cd PyDNG
         sudo pip3 install src/.
+
+* Install I2C and SPI support to use 1-wire devices (reference information found [here](https://learn.adafruit.com/dht-humidity-sensing-on-raspberry-pi-with-gdocs-logging/python-setup))
+
+    Make sure everything is up to date
+   
+        sudo apt-get update
+        sudo apt-get upgrade
+        sudo apt-get dist-upgrade
+        sudo apt-get autoremove
+
+    Install I2C tools
+   
+        sudo apt-get install -y python-smbus
+        sudo apt-get install -y i2c-tools
+
+    Enable I2C and SPI interfaces
+
+        sudo raspi-config
+
+    * Interface Options > SPI > Yes
+    * Interface Options > I2C > Yes
+
+   Press "Ok", "Finish", and reboot the Raspberry Pi.
+
+    Install Adafruit support to get the ``digitalio`` module
+    
+        pip3 install adafruit-circuitpython-dht
+        sudo apt-get install libgpiod2
 
 * Install ftp
 
