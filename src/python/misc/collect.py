@@ -225,15 +225,20 @@ while True:
          os.mkdir(log_directory)
 
       # Create log files
-      environmental_log_filename = \
-         os.path.join(log_directory, 'environmental.log')
-      if not os.path.isfile(environmental_log_filename):
+      log_basename = \
+         'temperature_humidity' + \
+         '_' + \
+         station_parameters['stationName'] + \
+         '.log'
+      temperature_humidity_log_filename = \
+         os.path.join(log_directory, log_basename)
+      if not os.path.isfile(temperature_humidity_log_filename):
          if verbose:
-            msg = 'Creating environmental log file ...'
+            msg = 'Creating temperature/humidity log file ...'
             msg += '\n'
             sys.stdout.write(msg)
             sys.stdout.flush()
-         f = open(environmental_log_filename, 'w')
+         f = open(temperature_humidity_log_filename, 'w')
          msg = 'ISO8601 Time String,'
          msg += 'Temperature [F],'
          msg += 'Relative Humidity [%]'
@@ -458,8 +463,8 @@ while True:
                msg += ','
                msg += '{0:.1f}'.format(humidity)
                msg += '\n'
-               if os.path.isfile(environmental_log_filename):
-                  f = open(environmental_log_filename, 'a')
+               if os.path.isfile(temperature_humidity_log_filename):
+                  f = open(temperature_humidity_log_filename, 'a')
                   f.write(msg)
                   f.close()
 
