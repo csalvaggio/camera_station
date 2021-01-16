@@ -54,7 +54,7 @@ def temperature_humidity(station_parameters,
 
    if temperature and humidity:
       if verbose:
-         msg = 'Enclosure\'s environmental conditions: '
+         msg = 'Enclosure environmental conditions: '
          msg += '\n'
          msg += '   Temperature: {0:.1f} [F]'.format(temperature)
          msg += '\n'
