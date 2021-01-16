@@ -1,7 +1,6 @@
 import sys
 import time
 
-#import adafruit_dht
 import sensors.adafruit
 
 def temperature_humidity(data_pin=14,
@@ -10,7 +9,6 @@ def temperature_humidity(data_pin=14,
                          error_is_terminal=False,
                          verbose=False):
    try:
-#      dht = adafruit_dht.DHT22(data_pin, use_pulseio=True)
       dht = sensors.adafruit.adafruit_dht.DHT22(data_pin, use_pulseio=True)
    except:
       if error_is_terminal:
