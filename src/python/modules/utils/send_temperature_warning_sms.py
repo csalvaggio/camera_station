@@ -38,8 +38,8 @@ def send_temperature_warning_sms(station_parameters):
       sys.stderr.flush()
       sys.exit()
    except:
-      msg = '*** WARNING *** Unable to connect to SMTP server to send'
-      msg += 'power cycle message'
+      msg = '*** WARNING *** Unable to connect to SMTP server to send '
+      msg += 'temperature warning message'
       msg += '\n'
       msg += '... aborting attempt'
       msg += '\n'
@@ -53,7 +53,7 @@ def send_temperature_warning_sms(station_parameters):
                     station_parameters['smsReceivers'],
                     message)
    except smtplib.SMTPException:
-      msg = '*** WARNING *** Unable to send power cycle message'
+      msg = '*** WARNING *** Unable to send temperature warning message'
       msg += '\n'
       msg += '... aborting attempt'
       msg += '\n'

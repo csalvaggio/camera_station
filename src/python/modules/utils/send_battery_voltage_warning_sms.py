@@ -1,14 +1,12 @@
 import smtplib
 import sys
 
-import sensors
+import battery
 
-def send_humidity_warning_sms(station_parameters):
-   readings = sensors.temperature_humidity()
-   if readings:
-      _, humidity = readings
-   else:
-      humidity = None
+def send_battery_voltage_warning_sms(station_parameters):
+   voltmeter = battery.Voltmeter(0)
+   voltage = voltmeter.read(samples=16)
+   voltmeter.close()
 
    # Form the message
    message = 'From: {0}\n'.format(station_parameters['smsSender'])
@@ -18,10 +16,10 @@ def send_humidity_warning_sms(station_parameters):
       message += 'To: {0}\n'.format(r)
    else:
       message += 'To: {0}\n'.format(station_parameters['smsReceivers'])
-   message += 'Subject: Enclosure Humidity Warning\n'
+   message += 'Subject: Battery Voltage Warning\n'
    message += '\n'
    message += 'Station name: {0}, '.format(station_parameters['stationName'])
-   message += 'Humidity: {0:.1f} [%]\n'.format(humidity)
+   message += 'Battery voltage: {0:.2f} [V]\n'.format(voltage)
 
    # Truncate message to meet SMS standards (160 characters)
    message = message[:160]
@@ -39,7 +37,7 @@ def send_humidity_warning_sms(station_parameters):
       sys.exit()
    except:
       msg = '*** WARNING *** Unable to connect to SMTP server to send '
-      msg += 'humidity warning message'
+      msg += 'battery voltage message'
       msg += '\n'
       msg += '... aborting attempt'
       msg += '\n'
@@ -53,7 +51,7 @@ def send_humidity_warning_sms(station_parameters):
                     station_parameters['smsReceivers'],
                     message)
    except smtplib.SMTPException:
-      msg = '*** WARNING *** Unable to send humidity warning message'
+      msg = '*** WARNING *** Unable to send battery voltage warning message'
       msg += '\n'
       msg += '... aborting attempt'
       msg += '\n'
@@ -75,4 +73,4 @@ if __name__ == '__main__':
    station_parameters['smsReceivers'] = receivers.split('|')
    station_parameters['smtpServer'] = 'mail.cis.rit.edu'
 
-   utils.send_humidity_warning_sms(station_parameters)
+   utils.send_battery_voltage_warning_sms(station_parameters)

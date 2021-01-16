@@ -23,6 +23,8 @@ def get_station_parameters(verbose=False):
                 'highTemperatureWarning',
                 'lowHumidityWarning',
                 'highHumidityWarning',
+                'lowVoltageWarning',
+                'highVoltageWarning',
                 'updateHour',
                 'uploadHour',
                 'healthEmailHour',

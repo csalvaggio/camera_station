@@ -30,7 +30,7 @@ def send_power_cycle_sms(station_parameters):
       sys.stderr.flush()
       sys.exit()
    except:
-      msg = '*** WARNING *** Unable to connect to SMTP server to send'
+      msg = '*** WARNING *** Unable to connect to SMTP server to send '
       msg += 'power cycle message'
       msg += '\n'
       msg += '... aborting attempt'

@@ -1,1 +1,2 @@
+from .battery_voltage import battery_voltage
 from .temperature_humidity import temperature_humidity
