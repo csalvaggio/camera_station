@@ -415,7 +415,7 @@ while True:
             # humidity and send SMS alert if either is out of it's
             # acceptable range
             temperature, humidity = \
-               log_temperature_humidity(station_parameters,
+               log.temperature_humidity(station_parameters,
                                         iso8601_time_string,
                                         alert=True,
                                         verbose=verbose)
