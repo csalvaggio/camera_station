@@ -83,26 +83,28 @@ def send_health_email(station_parameters,
       message += 'Humidity:  {0:.1f} [%]\n'.format(humidity)
    else:
       message += 'Humidity:  n/a\n'
-   message += '\n'
-   message += 'Most recent station parameters update:  '
-   message += \
-      'SUCCESS\n' if station_parameters_pickup_successful else 'FAILED\n'
-   message += 'Most recent hourly parameters update:  '
-   message += \
-      'SUCCESS\n' if hourly_parameters_pickup_successful else 'FAILED\n'
-   message += 'Most recent hardware parameters update:  '
-   message += \
-      'SUCCESS\n' if hardware_parameters_pickup_successful else 'FAILED\n'
-   message += '\n'
-   message += 'Most recent file upload attempt:  '
-   message += \
-      'SUCCESS ({0} files uploaded)\n'.format(files_uploaded) \
-      if upload_successful else 'FAILED\n'
-   message += '\n'
-   message += 'Number of images currently held on station\'s local storage: '
-   message += '{0:,}\n'.format(len(filenames))
-   message += 'Local storage currently used:  '
-   message += '{0:,} [bytes]\n'.format(bytes_used)
+   if station_parameters['updateHour'] >= 0:
+      message += '\n'
+      message += 'Most recent station parameters update:  '
+      message += \
+         'SUCCESS\n' if station_parameters_pickup_successful else 'FAILED\n'
+      message += 'Most recent hourly parameters update:  '
+      message += \
+         'SUCCESS\n' if hourly_parameters_pickup_successful else 'FAILED\n'
+      message += 'Most recent hardware parameters update:  '
+      message += \
+         'SUCCESS\n' if hardware_parameters_pickup_successful else 'FAILED\n'
+   if station_parameters['uploadHour'] >= 0:
+      message += '\n'
+      message += 'Most recent file upload attempt:  '
+      message += \
+         'SUCCESS ({0} files uploaded)\n'.format(files_uploaded) \
+         if upload_successful else 'FAILED\n'
+      message += '\n'
+      message += 'Number of images currently held on station\'s local storage: '
+      message += '{0:,}\n'.format(len(filenames))
+      message += 'Local storage currently used:  '
+      message += '{0:,} [bytes]\n'.format(bytes_used)
 
    # Send the message
    smtp = smtplib.SMTP()

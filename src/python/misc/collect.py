@@ -49,6 +49,7 @@ dump_station_parameters_database = args.dump_station_parameters_database
 initial_startup = True
 upload_successful = False
 files_uploaded = 0
+event_offset = 60
 
 while True:
    # Pick up the latest parameters from the databases
@@ -242,6 +243,7 @@ while True:
          # If it is the scheduled time, break out of the triggering loop
          # to pick up the latest camera station parameters
          update_time = station_parameters['updateHour'] * 3600
+         update_time += event_offset
          if seconds_since_midnight == update_time:
             if verbose:
                msg = 'Turning off the camera ...'
@@ -254,6 +256,7 @@ while True:
 
          # If it is the scheduled time, send a system health e-mail
          health_email_time = station_parameters['healthEmailHour'] * 3600
+         health_email_time += event_offset
          if seconds_since_midnight == health_email_time:
             if verbose:
                msg = 'Sending a system health e-mail ...'
@@ -275,6 +278,7 @@ while True:
 
          # If it is the scheduled time, upload daily imagery to the server
          upload_time = station_parameters['uploadHour'] * 3600
+         upload_time += event_offset
          if seconds_since_midnight == upload_time:
             if verbose:
                msg = 'Performing the daily imagery upload ...'
