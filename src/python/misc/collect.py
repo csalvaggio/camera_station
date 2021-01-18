@@ -428,13 +428,13 @@ while True:
                                               alert=True,
                                               verbose=verbose)
 
-                  # Log the battery voltage and send SMS alert if it is
-                  # out of it's acceptable range
+                  # Log the voltages and send SMS alert if the battery
+                  # voltage is out of it's acceptable range
                   voltage = \
-                     log.battery_voltage(station_parameters,
-                                         iso8601_time_string,
-                                         alert=True,
-                                         verbose=verbose)
+                     log.voltage(station_parameters,
+                                 iso8601_time_string,
+                                 alert=True,
+                                 verbose=verbose)
 
                   continue
 
@@ -468,13 +468,13 @@ while True:
                                         alert=True,
                                         verbose=verbose)
 
-            # Log the battery voltage and send SMS alert if it is
-            # out of it's acceptable range
+            # Log the voltages and send SMS alert if the battery
+            # voltage is out of it's acceptable range
             voltage = \
-               log.battery_voltage(station_parameters,
-                                   iso8601_time_string,
-                                   alert=True,
-                                   verbose=verbose)
+               log.voltage(station_parameters,
+                           iso8601_time_string,
+                           alert=True,
+                           verbose=verbose)
 
             # Check the capture status and reset camera if necessary
             if capture_status == 0:

@@ -38,9 +38,19 @@ def send_health_email(station_parameters,
    for filename in filenames:
       bytes_used += os.path.getsize(filename)
 
-   # Get the battery voltage
-   voltmeter = battery.Voltmeter()
-   voltage = voltmeter.read(samples=16)
+   # Get the source (battery) voltage
+   voltmeter = battery.Voltmeter(0)
+   source = voltmeter.read(samples=16)
+   voltmeter.close()
+
+   # Get the regulator (5V) output voltage
+   voltmeter = battery.Voltmeter(1)
+   regulator5 = voltmeter.read(samples=16)
+   voltmeter.close()
+
+   # Get the regulator (7.6V) output voltage
+   voltmeter = battery.Voltmeter(2)
+   regulator76 = voltmeter.read(samples=16)
    voltmeter.close()
 
    # Get the enclosure's interior environmental paramaters
@@ -72,19 +82,17 @@ def send_health_email(station_parameters,
    message += 'Sunrise:  {0}\n'.format(sunrise)
    message += 'Sunset:  {0}\n'.format(sunset)
    message += '\n'
-   if voltage:
-      message += 'Battery voltage:  {0:.2f} [V]\n'.format(voltage)
-   else:
-      message += 'Battery voltage:  n/a\n'
+   message += 'Battery:  '
+   message += '{0:.2f} [V]\n'.format(source) if source else 'n/a\n'
+   message += 'Regulator (5V) output:  '
+   message += '{0:.2f} [V]\n'.format(regulator5) if regulator5 else 'n/a\n'
+   message += 'Regulator (7.6V) output:  '
+   message += '{0:.2f} [V]\n'.format(regulator76) if regulator76 else 'n/a\n'
    message += '\n'
-   if temperature:
-      message += 'Temperature:  {0:.1f} [F]\n'.format(temperature)
-   else:
-      message += 'Temperature:  n/a\n'
-   if humidity:
-      message += 'Humidity:  {0:.1f} [%]\n'.format(humidity)
-   else:
-      message += 'Humidity:  n/a\n'
+   message += 'Temperature:  '
+   message += '{0:.1f} [F]\n'.format(temperature) if temperature else 'n/a\n'
+   message += 'Humidity:  '
+   message += '{0:.1f} [%]\n'.format(humidity) if humidity else 'n/a\n'
    if station_parameters['updateHour'] >= 0:
       message += '\n'
       message += 'Most recent station parameters update:  '
