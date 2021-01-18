@@ -179,24 +179,62 @@ while True:
       sys.stderr.flush()
       sys.exit()
 
+   # Form the categorical output directory paths
+   images_directory = \
+      os.path.join(station_parameters['localDirectory'], 'images')
+   logs_directory = \
+      os.path.join(station_parameters['localDirectory'], 'logs')
+
+   # If they do not exist, create the categorical output directories
+   if not os.path.isdir(images_directory):
+      if verbose:
+         msg = 'Creating images directory ...'
+         msg += '\n'
+         sys.stdout.write(msg)
+         sys.stdout.flush()
+      os.mkdir(images_directory)
+   if not os.path.isdir(logs_directory):
+      if verbose:
+         msg = 'Creating logs directory ...'
+         msg += '\n'
+         sys.stdout.write(msg)
+         sys.stdout.flush()
+      os.mkdir(logs_directory)
+
    # Initialize the camera
    camera_parameters = camera.initialize(station_parameters, verbose=verbose)
 
    # Perform startup only actions
    if initial_startup:
-      # Remove pre-existing files in the output directory
-      local_filenames = \
-         utils.get_file_listing(station_parameters['localDirectory'])
+      # Remove pre-existing files in the categorical output directories
+      local_filenames = utils.get_file_listing(images_directory)
       if len(local_filenames) > 0:
          if keep_pre_existing_files:
             if verbose:
-               msg = 'Keeping pre-existing files in the output directory ...'
+               msg = 'Keeping pre-existing image files ...'
                msg += '\n'
                sys.stdout.write(msg)
                sys.stdout.flush()
          else:
             if verbose:
-               msg = 'Removing pre-existing files from the output directory ...'
+               msg = 'Removing pre-existing image files ...'
+               msg += '\n'
+               sys.stdout.write(msg)
+               sys.stdout.flush()
+            for local_filename in local_filenames:
+               os.remove(local_filename)
+
+      local_filenames = utils.get_file_listing(logs_directory)
+      if len(local_filenames) > 0:
+         if keep_pre_existing_files:
+            if verbose:
+               msg = 'Keeping pre-existing log files ...'
+               msg += '\n'
+               sys.stdout.write(msg)
+               sys.stdout.flush()
+         else:
+            if verbose:
+               msg = 'Removing pre-existing log files ...'
                msg += '\n'
                sys.stdout.write(msg)
                sys.stdout.flush()
@@ -285,16 +323,15 @@ while True:
                msg += '\n'
                sys.stdout.write(msg)
                sys.stdout.flush()
-            # Create a list of all files to upload
-            local_filenames = \
-               utils.get_file_listing(station_parameters['localDirectory'])
+            # Create a list of all image files to upload
+            local_filenames = utils.get_file_listing(images_directory)
             # Perform the upload
             if len(local_filenames) > 0:
                upload_successful = \
                   utils.upload_files_to_ftp_server(
                      local_filenames,
                      station_parameters['ftpServer'],
-                     station_parameters['ftpDirectory'],
+                     os.path.join(station_parameters['ftpDirectory'], 'images'),
                      verbose=verbose,
                      report_stats=verbose)
                if verbose:
@@ -410,8 +447,7 @@ while True:
                basename += hardware['station_name']
             else:
                basename += hardware['mac_address']
-            local_basename = \
-               os.path.join(station_parameters['localDirectory'], basename)
+            local_basename = os.path.join(images_directory, basename)
 
             # Capture image and save it to the local disk
             capture_status = \

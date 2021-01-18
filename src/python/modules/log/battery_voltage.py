@@ -13,21 +13,21 @@ def battery_voltage(station_parameters,
                     verbose=False):
 
    # Create log file directory if it does not exist
-   log_directory = \
+   logs_directory = \
       os.path.join(station_parameters['localDirectory'], 'logs')
-   if not os.path.isdir(log_directory):
+   if not os.path.isdir(logs_directory):
       if verbose:
          msg = 'Creating log file directory ...'
          msg += '\n'
          sys.stdout.write(msg)
          sys.stdout.flush()
-      os.mkdir(log_directory)
+      os.mkdir(logs_directory)
 
    # Create log file if a new one has been requested or if it does not
    # currently exist
    log_type = 'battery_voltage'
    log_basename = log_type + '_' + station_parameters['stationName'] + '.log'
-   log_filename = os.path.join(log_directory, log_basename)
+   log_filename = os.path.join(logs_directory, log_basename)
 
    if create_new_log or not os.path.isfile(log_filename):
       if verbose:

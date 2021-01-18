@@ -31,7 +31,9 @@ def send_health_email(station_parameters,
                                           station_parameters['latitude'])
 
    # Get the storage statistics
-   filenames = utils.get_file_listing(station_parameters['localDirectory'])
+   images_directory = \
+      os.path.join(station_parameters['localDirectory'], 'images')
+   filenames = utils.get_file_listing(images_directory)
    bytes_used = 0
    for filename in filenames:
       bytes_used += os.path.getsize(filename)
@@ -153,7 +155,9 @@ if __name__ == '__main__':
    station_parameters['stationName'] = 'cameraXXX'
    station_parameters['longitude'] = -77.6088
    station_parameters['latitude'] = 43.1566
-   station_parameters['localDirectory'] = os.path.expanduser('~')
+   station_parameters['localDirectory'] = '/media/pi/STORAGE'
+   station_parameters['updateHour'] = 8
+   station_parameters['uploadHour'] = 3
    station_parameters['emailSender'] = 'salvaggio@cis.rit.edu'
    receivers = 'salvaggio@cis.rit.edu|carl.salvaggio@rit.edu'
    station_parameters['emailReceivers'] = receivers.split('|')
