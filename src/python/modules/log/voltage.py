@@ -38,8 +38,8 @@ def voltage(station_parameters,
       f = open(log_filename, 'w')
       msg = 'ISO8601 Time String,'
       msg += 'Battery [V],'
-      msg += 'Regulator (5V) Output [V],'
-      msg += 'Regulator (7.6V) Output [V]'
+      msg += 'Regulator (7.6V) Output [V],'
+      msg += 'Regulator (5V) Output [V]'
       msg += '\n'
       f.write(msg)
       f.close()
@@ -49,14 +49,14 @@ def voltage(station_parameters,
    source = voltmeter.read(samples=16)
    voltmeter.close()
 
-   # Log the regulator (5V) output voltage
+   # Log the regulator (7.6V) output voltage
    voltmeter = battery.Voltmeter(1)
-   regulator5 = voltmeter.read(samples=16)
+   regulator76 = voltmeter.read(samples=16)
    voltmeter.close()
 
-   # Log the regulator (7.6V) output voltage
+   # Log the regulator (5V) output voltage
    voltmeter = battery.Voltmeter(2)
-   regulator76 = voltmeter.read(samples=16)
+   regulator5 = voltmeter.read(samples=16)
    voltmeter.close()
 
    if source or regulator5 or regulator76:
@@ -66,11 +66,11 @@ def voltage(station_parameters,
          msg += '   Battery: '
          msg += '{0:.2f} [V]'.format(source) if source else 'n/a'
          msg += '\n'
-         msg += '   Regulator (5V) output: '
-         msg += '{0:.2f} [V]'.format(regulator5) if regulator5 else 'n/a'
-         msg += '\n'
          msg += '   Regulator (7.6V) output: '
          msg += '{0:.2f} [V]'.format(regulator76) if regulator76 else 'n/a'
+         msg += '\n'
+         msg += '   Regulator (5V) output: '
+         msg += '{0:.2f} [V]'.format(regulator5) if regulator5 else 'n/a'
          msg += '\n'
          msg += '\n'
          sys.stdout.write(msg)
@@ -84,9 +84,9 @@ def voltage(station_parameters,
       msg += ','
       msg += '{0:.2f}'.format(source) if source else 'n/a'
       msg += ','
-      msg += '{0:.2f}'.format(regulator5) if regulator5 else 'n/a'
-      msg += ','
       msg += '{0:.2f}'.format(regulator76) if regulator76 else 'n/a'
+      msg += ','
+      msg += '{0:.2f}'.format(regulator5) if regulator5 else 'n/a'
       msg += '\n'
       if os.path.isfile(log_filename):
          f = open(log_filename, 'a')

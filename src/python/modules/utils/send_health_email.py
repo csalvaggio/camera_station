@@ -43,14 +43,14 @@ def send_health_email(station_parameters,
    source = voltmeter.read(samples=16)
    voltmeter.close()
 
-   # Get the regulator (5V) output voltage
+   # Get the regulator (7.6V) output voltage
    voltmeter = battery.Voltmeter(1)
-   regulator5 = voltmeter.read(samples=16)
+   regulator76 = voltmeter.read(samples=16)
    voltmeter.close()
 
-   # Get the regulator (7.6V) output voltage
+   # Get the regulator (5V) output voltage
    voltmeter = battery.Voltmeter(2)
-   regulator76 = voltmeter.read(samples=16)
+   regulator5 = voltmeter.read(samples=16)
    voltmeter.close()
 
    # Get the enclosure's interior environmental paramaters
@@ -84,10 +84,10 @@ def send_health_email(station_parameters,
    message += '\n'
    message += 'Battery:  '
    message += '{0:.2f} [V]\n'.format(source) if source else 'n/a\n'
-   message += 'Regulator (5V) output:  '
-   message += '{0:.2f} [V]\n'.format(regulator5) if regulator5 else 'n/a\n'
    message += 'Regulator (7.6V) output:  '
    message += '{0:.2f} [V]\n'.format(regulator76) if regulator76 else 'n/a\n'
+   message += 'Regulator (5V) output:  '
+   message += '{0:.2f} [V]\n'.format(regulator5) if regulator5 else 'n/a\n'
    message += '\n'
    message += 'Temperature:  '
    message += '{0:.1f} [F]\n'.format(temperature) if temperature else 'n/a\n'
