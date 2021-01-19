@@ -38,20 +38,26 @@ def send_health_email(station_parameters,
    for filename in filenames:
       bytes_used += os.path.getsize(filename)
 
-   # Get the source (battery) voltage
-   voltmeter = battery.Voltmeter(0)
-   source = voltmeter.read(samples=16)
-   voltmeter.close()
-
-   # Get the regulator (7.6V) output voltage
-   voltmeter = battery.Voltmeter(1)
-   regulator76 = voltmeter.read(samples=16)
-   voltmeter.close()
-
-   # Get the regulator (5V) output voltage
-   voltmeter = battery.Voltmeter(2)
-   regulator5 = voltmeter.read(samples=16)
-   voltmeter.close()
+   # Get the voltage(s)
+   fieldNames = \
+      ['voltmeter1Label',
+       'voltmeter2Label',
+       'voltmeter3Label',
+       'voltmeter4Label',
+       'voltmeter5Label',
+       'voltmeter6Label',
+       'voltmeter7Label',
+       'voltmeter8Label']
+   voltmeterLabels = []
+   voltages = []
+   for fieldName in fieldNames:
+      if len(station_parameters[fieldName]):
+         voltmeterLabels.append(station_parameters[fieldName])
+      else:
+         voltmeterLabels.append(None)
+      voltmeter = battery.Voltmeter(fieldNames.index(fieldName))
+      voltages.append(voltmeter.read(samples=16))
+      voltmeter.close()
 
    # Get the enclosure's interior environmental paramaters
    readings = sensors.temperature_humidity(temperature_units='f')
@@ -82,17 +88,21 @@ def send_health_email(station_parameters,
    message += 'Sunrise:  {0}\n'.format(sunrise)
    message += 'Sunset:  {0}\n'.format(sunset)
    message += '\n'
-   message += 'Battery:  '
-   message += '{0:.2f} [V]\n'.format(source) if source else 'n/a\n'
-   message += 'Regulator (7.6V) output:  '
-   message += '{0:.2f} [V]\n'.format(regulator76) if regulator76 else 'n/a\n'
-   message += 'Regulator (5V) output:  '
-   message += '{0:.2f} [V]\n'.format(regulator5) if regulator5 else 'n/a\n'
-   message += '\n'
-   message += 'Temperature:  '
-   message += '{0:.1f} [F]\n'.format(temperature) if temperature else 'n/a\n'
-   message += 'Humidity:  '
-   message += '{0:.1f} [%]\n'.format(humidity) if humidity else 'n/a\n'
+   if any(voltmeterLabels):
+      for voltmeterLabel in voltmeterLabels:
+         if voltmeterLabel:
+            message += voltmeterLabel
+            message += ': '
+            v = voltages[voltmeterLabels.index(voltmeterLabel)]
+            message += '{0:.2f}'.format(v) if v else 'n/a'
+            message += '\n'
+      message += '\n'
+   message += station_parameters['temperatureLabel']
+   message += ':  '
+   message += '{0:.1f}\n'.format(temperature) if temperature else 'n/a\n'
+   message += station_parameters['humidityLabel']
+   message += ':  '
+   message += '{0:.1f}\n'.format(humidity) if humidity else 'n/a\n'
    if station_parameters['updateHour'] >= 0:
       message += '\n'
       message += 'Most recent station parameters update:  '
@@ -170,6 +180,17 @@ if __name__ == '__main__':
    receivers = 'salvaggio@cis.rit.edu|carl.salvaggio@rit.edu'
    station_parameters['emailReceivers'] = receivers.split('|')
    station_parameters['smtpServer'] = 'mail.cis.rit.edu'
+   station_parameters['temperatureLabel'] = 'Temperature [F]'
+   station_parameters['humidityLabel'] = 'Humidity [%]'
+   station_parameters['voltageWarningChannel'] = 1
+   station_parameters['voltmeter1Label'] = 'Battery [V]'
+   station_parameters['voltmeter2Label'] = ''
+   station_parameters['voltmeter3Label'] = ''
+   station_parameters['voltmeter4Label'] = ''
+   station_parameters['voltmeter5Label'] = ''
+   station_parameters['voltmeter6Label'] = ''
+   station_parameters['voltmeter7Label'] = ''
+   station_parameters['voltmeter8Label'] = ''
 
    utils.send_health_email(station_parameters,
                            True,

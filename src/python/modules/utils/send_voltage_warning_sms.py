@@ -4,9 +4,13 @@ import sys
 import battery
 
 def send_voltage_warning_sms(station_parameters):
-   voltmeter = battery.Voltmeter(0)
-   battery = voltmeter.read(samples=16)
+   voltageWarningChannelIdx = station_parameters['voltageWarningChannel'] - 1
+   voltmeter = battery.Voltmeter(voltageWarningChannelIdx)
+   voltage = voltmeter.read(samples=16)
    voltmeter.close()
+
+   fieldName = 'voltmeter' + str(voltageWarningChannelIdx + 1) + 'Label'
+   label = station_parameters[fieldName]
 
    # Form the message
    message = 'From: {0}\n'.format(station_parameters['smsSender'])
@@ -19,7 +23,8 @@ def send_voltage_warning_sms(station_parameters):
    message += 'Subject: Battery Voltage Warning\n'
    message += '\n'
    message += 'Station name: {0}, '.format(station_parameters['stationName'])
-   message += 'Battery: {0:.2f} [V]\n'.format(battery)
+   message += label
+   message += ': {0:.2f}\n'.format(voltage)
 
    # Truncate message to meet SMS standards (160 characters)
    message = message[:160]
@@ -72,5 +77,7 @@ if __name__ == '__main__':
    receivers = 'cnspci-sms@cis.rit.edu'
    station_parameters['smsReceivers'] = receivers.split('|')
    station_parameters['smtpServer'] = 'mail.cis.rit.edu'
+   station_parameters['voltageWarningChannel'] = 1
+   station_parameters['voltmeter1Label'] = 'Battery [V]'
 
    utils.send_voltage_warning_sms(station_parameters)

@@ -430,7 +430,7 @@ while True:
 
                   # Log the voltages and send SMS alert if the battery
                   # voltage is out of it's acceptable range
-                  voltage = \
+                  voltages = \
                      log.voltage(station_parameters,
                                  iso8601_time_string,
                                  alert=True,
@@ -470,7 +470,7 @@ while True:
 
             # Log the voltages and send SMS alert if the battery
             # voltage is out of it's acceptable range
-            voltage = \
+            voltages = \
                log.voltage(station_parameters,
                            iso8601_time_string,
                            alert=True,

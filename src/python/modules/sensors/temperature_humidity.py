@@ -128,18 +128,28 @@ if __name__ == '__main__':
 
    if readings:
       temperature, humidity = readings
-      msg = 'Temperature: {0:.1f} '.format(temperature) 
+      msg = 'Temperature '
       msg += '[{0}]'.format(temperature_units.upper())
+      msg += ': '
+      msg += '{0:.1f}'.format(temperature) 
       msg += '\n'
-      msg += 'Humidity: {0:.1f} '.format(humidity) 
+      msg += 'Humidity '
       msg += '[%]'
+      msg += ': '
+      msg += '{0:.1f}'.format(humidity) 
       msg += '\n'
       sys.stdout.write(msg)
       sys.stdout.flush()
    else:
-      msg = 'Temperature: n/a'
+      msg = 'Temperature '
+      msg += '[{0}]'.format(temperature_units.upper())
+      msg += ': '
+      msg += 'n/a'
       msg += '\n'
-      msg += 'Humidity: n/a'
+      msg += 'Humidity '
+      msg += '[%]'
+      msg += ': '
+      msg += 'n/a'
       msg += '\n'
       sys.stdout.write(msg)
       sys.stdout.flush()

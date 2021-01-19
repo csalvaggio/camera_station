@@ -36,14 +36,16 @@ def temperature_humidity(station_parameters,
          sys.stdout.write(msg)
          sys.stdout.flush()
       f = open(log_filename, 'w')
-      msg = 'ISO8601 Time String,'
-      msg += 'Temperature [F],'
-      msg += 'Relative Humidity [%]'
+      msg = 'ISO8601 Time String'
+      msg += ','
+      msg += station_parameters['temperatureLabel']
+      msg += ','
+      msg += station_parameters['humidityLabel']
       msg += '\n'
       f.write(msg)
       f.close()
 
-   # Log the enclosure's interior temperature and relative humidity
+   # Log the enclosure's interior temperature and humidity
    readings = \
       sensors.temperature_humidity(temperature_units='f', verbose=verbose)
    if readings:
@@ -56,9 +58,15 @@ def temperature_humidity(station_parameters,
       if verbose:
          msg = 'Enclosure environmental conditions ...'
          msg += '\n'
-         msg += '   Temperature: {0:.1f} [F]'.format(temperature)
+         msg += '   '
+         msg += station_parameters['temperatureLabel']
+         msg += ': '
+         msg += '{0:.1f}'.format(temperature)
          msg += '\n'
-         msg += '   Humidity: {0:.1f} [%]'.format(humidity)
+         msg += '   '
+         msg += station_parameters['humidityLabel']
+         msg += ': '
+         msg += '{0:.1f}'.format(humidity)
          msg += '\n'
          msg += '\n'
          sys.stdout.write(msg)

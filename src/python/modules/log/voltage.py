@@ -12,6 +12,27 @@ def voltage(station_parameters,
             alert=False,
             verbose=False):
 
+   # Read the voltage(s)
+   fieldNames = \
+      ['voltmeter1Label',
+       'voltmeter2Label',
+       'voltmeter3Label',
+       'voltmeter4Label',
+       'voltmeter5Label',
+       'voltmeter6Label',
+       'voltmeter7Label',
+       'voltmeter8Label']
+   voltmeterLabels = []
+   voltages = []
+   for fieldName in fieldNames:
+      if len(station_parameters[fieldName]):
+         voltmeterLabels.append(station_parameters[fieldName])
+      else:
+         voltmeterLabels.append(None)
+      voltmeter = battery.Voltmeter(fieldNames.index(fieldName))
+      voltages.append(voltmeter.read(samples=16))
+      voltmeter.close()
+
    # Create log file directory if it does not exist
    logs_directory = \
       os.path.join(station_parameters['localDirectory'], 'logs')
@@ -36,73 +57,61 @@ def voltage(station_parameters,
          sys.stdout.write(msg)
          sys.stdout.flush()
       f = open(log_filename, 'w')
-      msg = 'ISO8601 Time String,'
-      msg += 'Battery [V],'
-      msg += 'Regulator (7.6V) Output [V],'
-      msg += 'Regulator (5V) Output [V]'
+      msg = 'ISO8601 Time String'
+      for voltmeterLabel in voltmeterLabels:
+         if voltmeterLabel:
+            msg += ','
+            msg += voltmeterLabel
       msg += '\n'
       f.write(msg)
       f.close()
 
-   # Log the source (battery) voltage
-   voltmeter = battery.Voltmeter(0)
-   source = voltmeter.read(samples=16)
-   voltmeter.close()
-
-   # Log the regulator (7.6V) output voltage
-   voltmeter = battery.Voltmeter(1)
-   regulator76 = voltmeter.read(samples=16)
-   voltmeter.close()
-
-   # Log the regulator (5V) output voltage
-   voltmeter = battery.Voltmeter(2)
-   regulator5 = voltmeter.read(samples=16)
-   voltmeter.close()
-
-   if source or regulator5 or regulator76:
+   if any(voltmeterLabels):
+      # Display the voltage(s) to the standard output if desired
       if verbose:
          msg = 'Power conditions ...'
          msg += '\n'
-         msg += '   Battery: '
-         msg += '{0:.2f} [V]'.format(source) if source else 'n/a'
-         msg += '\n'
-         msg += '   Regulator (7.6V) output: '
-         msg += '{0:.2f} [V]'.format(regulator76) if regulator76 else 'n/a'
-         msg += '\n'
-         msg += '   Regulator (5V) output: '
-         msg += '{0:.2f} [V]'.format(regulator5) if regulator5 else 'n/a'
-         msg += '\n'
+         for voltmeterLabel in voltmeterLabels:
+            if voltmeterLabel:
+               msg += '   '
+               msg += voltmeterLabel
+               msg += ': '
+               v = voltages[voltmeterLabels.index(voltmeterLabel)]
+               msg += '{0:.2f}'.format(v) if v else 'n/a'
+               msg += '\n'
          msg += '\n'
          sys.stdout.write(msg)
          sys.stdout.flush()
 
+      # Write the current voltages to the log file
       if not iso8601_time_string:
          iso8601_time_string = \
             clock.iso8601_time_string_using_computer_clock()
 
       msg = iso8601_time_string
-      msg += ','
-      msg += '{0:.2f}'.format(source) if source else 'n/a'
-      msg += ','
-      msg += '{0:.2f}'.format(regulator76) if regulator76 else 'n/a'
-      msg += ','
-      msg += '{0:.2f}'.format(regulator5) if regulator5 else 'n/a'
+      for voltmeterLabel in voltmeterLabels:
+         if voltmeterLabel:
+            v = voltages[voltmeterLabels.index(voltmeterLabel)]
+            msg += ','
+            msg += '{0:.2f}'.format(v) if v else 'n/a'
       msg += '\n'
       if os.path.isfile(log_filename):
          f = open(log_filename, 'a')
          f.write(msg)
          f.close()
 
+      # Send a voltage warning SMS (if necessary) based on the first
+      # voltage channel's value
       if alert:
-         # Send a source (battery) voltage warning SMS (if necessary)
-         if source < station_parameters['lowVoltageWarning'] or \
-            source > station_parameters['highVoltageWarning']:
+         v = voltages[station_parameters['voltageWarningChannel'] - 1]
+         if v < station_parameters['lowVoltageWarning'] or \
+            v > station_parameters['highVoltageWarning']:
             if verbose:
-               msg = 'Sending a source (battery) voltage warning SMS ...'
+               msg = 'Sending a voltage warning SMS ...'
                msg += '\n'
                msg += '\n'
                sys.stdout.write(msg)
                sys.stdout.flush()
             utils.send_voltage_warning_sms(station_parameters)
 
-   return voltage
+   return voltages

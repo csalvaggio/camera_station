@@ -21,7 +21,10 @@ def send_humidity_warning_sms(station_parameters):
    message += 'Subject: Enclosure Humidity Warning\n'
    message += '\n'
    message += 'Station name: {0}, '.format(station_parameters['stationName'])
-   message += 'Humidity: {0:.1f} [%]\n'.format(humidity)
+   message += station_parameters['humidityLabel']
+   message += ': '
+   message += '{0:.1f}'.format(humidity)
+   message += '\n'
 
    # Truncate message to meet SMS standards (160 characters)
    message = message[:160]
@@ -74,5 +77,6 @@ if __name__ == '__main__':
    receivers = 'cnspci-sms@cis.rit.edu'
    station_parameters['smsReceivers'] = receivers.split('|')
    station_parameters['smtpServer'] = 'mail.cis.rit.edu'
+   station_parameters['humidityLabel'] = 'Humidity [%]'
 
    utils.send_humidity_warning_sms(station_parameters)
