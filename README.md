@@ -223,3 +223,52 @@ This repository contains the ``/home/pi`` folder for the Raspberry Pi appliance 
         dtoverlay=disable-wifi
 
     This is necessary to allow the USB730L modem to respond in a timely fashion to permit an incoming ssh or VNC connection when a WiFi network is also available.  This may not be necessary when the device is in the field.
+    
+## CANON M100 SETUP
+After doing a factory reset on the Canon M100 camera, 
+
+### TOOL/4
+* Reset camera > Basic settings > OK
+* Reset camera > Other settings > Flash settings > OK
+* Reset camera > Other settings > Copyright info > OK
+* Reset camera > Other settings > Wireless settings > OK
+* Reset camera > Other settings > Custom function (C.Fn) > OK
+
+modify the following settings using the camera's setup menus.
+
+### CAMERA/1
+* Rec. Mode > Tv
+* Image quality > RAW
+
+### CAMERA/2
+* Image review > 2 sec.
+
+### CAMERA/3
+* AF operation > ONE SHOT
+* Continuous AF > Disable
+
+### CAMERA/4
+
+### CAMERA/5
+* ISO speed > AUTO
+
+### CAMERA/6
+
+### CAMERA/7
+* Drive mode > Single shooting
+
+### CAMERA/8
+
+### TOOL/1
+* Create Folder > Monthly
+* File Numbering > Continuous
+* Format  > Low Level Format (check) > OK > OK
+
+### TOOL/2
+* Eco Mode > Off
+* Power Saving > Display Off > 15 sec.
+* Power Saving > Auto Power Down > Disable
+* Disp. Brightness (turn all the way down)
+
+### TOOL/3
+* Screen auto-lock settings > Screen auto lock > Disable
