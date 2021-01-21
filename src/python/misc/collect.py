@@ -50,6 +50,7 @@ initial_startup = True
 upload_successful = False
 files_uploaded = 0
 event_offset = 60
+camera_power_on_offset = -30
 
 while True:
    # Pick up the latest parameters from the databases
@@ -201,9 +202,6 @@ while True:
          sys.stdout.flush()
       os.mkdir(logs_directory)
 
-   # Initialize the camera
-   camera_parameters = camera.initialize(station_parameters, verbose=verbose)
-
    # Perform startup only actions
    if initial_startup:
       # Remove pre-existing files in the categorical output directories
@@ -283,13 +281,7 @@ while True:
          update_time = station_parameters['updateHour'] * 3600
          update_time += event_offset
          if seconds_since_midnight == update_time:
-            if verbose:
-               msg = 'Turning off the camera ...'
-               msg += '\n'
-               sys.stdout.write(msg)
-               sys.stdout.flush()
-            camera.close(station_parameters, camera_parameters, verbose=verbose)
-            time.sleep(15)
+            time.sleep(1)
             break
 
          # If it is the scheduled time, send a system health e-mail
@@ -374,13 +366,42 @@ while True:
                files_uploaded = len(local_filenames)
             else:
                files_uploaded = 0
-
             time.sleep(1)
             continue
 
          # Determine the current trigger frequency
          hour = seconds_since_midnight // 3600
          trigger_frequency = hourly_parameters['triggerFrequency'][hour]
+
+         # If it is the scheduled time, turn the camera power on
+         camera_power_on_time = seconds_since_midnight - camera_power_on_offset
+         if camera_power_on_time % trigger_frequency == 0:
+            if station_parameters['skipEvening']:
+               if not clock.is_evening(iso8601_time_string,
+                                       station_parameters['longitude'],
+                                       station_parameters['latitude']):
+                  if verbose:
+                     msg = 'Powering on the camera ...'
+                     msg += '\n'
+                     sys.stdout.write(msg)
+                     sys.stdout.flush()
+                  # Power on the camera
+                  camera.power_on(station_parameters,
+                                  startup_duration=15,
+                                  verbose=verbose)
+                  if verbose:
+                     msg = '\n'
+                     sys.stdout.write(msg)
+                     sys.stdout.flush()
+                  # Initialize the camera
+                  camera_parameters = \
+                     camera.initialize(station_parameters, verbose=verbose)
+                  if verbose:
+                     msg = '\n'
+                     sys.stdout.write(msg)
+                     sys.stdout.flush()
+                  time.sleep(1)
+                  continue
 
          # If it is the next triggering time, begin that process
          if seconds_since_midnight % trigger_frequency == 0:
@@ -456,7 +477,24 @@ while True:
                               local_basename,
                               verbose=verbose)
 
-            # Delay execution until the next second
+            # Close the camera connection
+            camera.close(station_parameters,
+                         camera_parameters,
+                         verbose=verbose)
+
+            # Power off the camera
+            if verbose:
+               msg = 'Powering off the camera ...'
+               msg += '\n'
+               sys.stdout.write(msg)
+               sys.stdout.flush()
+            camera.power_off(station_parameters,
+                             shutdown_duration=5,
+                             verbose=verbose)
+            if verbose:
+               msg = '\n'
+               sys.stdout.write(msg)
+               sys.stdout.flush()
             time.sleep(1)
 
             # Log the enclosure's interior temperature and relative
@@ -476,77 +514,10 @@ while True:
                            alert=True,
                            verbose=verbose)
 
-            # Check the capture status and reset camera if necessary
-            if capture_status == 0:
-               if verbose:
-                  msg = 'Attempting a camera re-initialization ...'
-                  msg += '\n'
-                  sys.stdout.write(msg)
-                  sys.stdout.flush()
-
-               # Close the camera connection
-               camera.close(station_parameters,
-                            camera_parameters,
-                            verbose=verbose)
-
-               # Power cycle the camera
-               if verbose:
-                  msg = 'Power cycling the camera ...'
-                  msg += '\n'
-                  sys.stdout.write(msg)
-                  sys.stdout.flush()
-               camera.power_cycle(station_parameters,
-                                  shutdown_duration=15,
-                                  startup_duration=15,
-                                  verbose=verbose)
-               if verbose:
-                  msg = '\n'
-                  sys.stdout.write(msg)
-                  sys.stdout.flush()
-
-               # Re-initialize the camera
-               camera_parameters = \
-                  camera.initialize(station_parameters, verbose=verbose)
-
-               # Send a power cycle alert e-mail
-               if verbose:
-                  msg = 'Sending a power cycle alert e-mail ...'
-                  msg += '\n'
-                  sys.stdout.write(msg)
-                  sys.stdout.flush()
-               utils.send_power_cycle_email(station_parameters)
-
-               # Send a power cycle alert SMS
-               if verbose:
-                  msg = 'Sending a power cycle alert SMS ...'
-                  msg += '\n'
-                  sys.stdout.write(msg)
-                  sys.stdout.flush()
-               utils.send_power_cycle_sms(station_parameters)
-
-               if verbose:
-                  msg = '\n'
-                  msg += 'Waiting for next trigger ...'
-                  msg += '\n'
-                  msg += '\n'
-                  sys.stdout.write(msg)
-                  sys.stdout.flush()
-
    except KeyboardInterrupt:
-      # Close the camera connection
-      msg = '\n'
-      sys.stdout.write(msg)
-      sys.stdout.flush()
       if verbose:
-         msg = 'Turning off the camera ...'
-         msg += '\n'
-         sys.stdout.write(msg)
-         sys.stdout.flush()
-      camera.close(station_parameters, camera_parameters, verbose=verbose)
-
-      # Exit the script
-      if verbose:
-         msg = 'Exiting ...'
+         msg = '\n'
+         msg += 'Exiting ...'
          msg += '\n'
          sys.stdout.write(msg)
          sys.stdout.flush()

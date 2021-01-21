@@ -10,3 +10,9 @@ from .close import close
 from .power_cycle import power_cycle
 from .power_cycle_rpi_camera import power_cycle_rpi_camera
 from .power_cycle_gphoto2_camera import power_cycle_gphoto2_camera
+from .power_off import power_off
+from .power_off_rpi_camera import power_off_rpi_camera
+from .power_off_gphoto2_camera import power_off_gphoto2_camera
+from .power_on import power_on
+from .power_on_rpi_camera import power_on_rpi_camera
+from .power_on_gphoto2_camera import power_on_gphoto2_camera

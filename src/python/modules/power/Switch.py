@@ -39,7 +39,7 @@ class Switch(object):
          position) (0 is open, 1 is closed)
 
       close()
-         The public method to close the switch/clean up the GPIO
+         The public method to close the switch
 
    associated methods::
       None
@@ -135,7 +135,7 @@ class Switch(object):
       self.state = state
 
    def close(self):
-      RPi.GPIO.cleanup()
+      pass
 
 
 
@@ -173,7 +173,7 @@ if __name__ == '__main__':
    msg = 'Creating switch ...'
    msg += '\n'
    sys.stdout.write(msg)
-   switch = power.Switch(control_pin=21, load_connection='nc')
+   switch = power.Switch(control_pin=21, load_connection='no')
    time.sleep(5)
 
    msg = 'Turning switch {0}'.format(desired_state)
