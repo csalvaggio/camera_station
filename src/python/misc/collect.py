@@ -124,6 +124,32 @@ while True:
             sys.stdout.flush()
             hardware_parameters = previous_hardware_parameters
 
+      camera.power_off(station_parameters,
+                       shutdown_duration=5,
+                       verbose=verbose)
+      camera.power_on(station_parameters,
+                      startup_duration=15,
+                      verbose=verbose)
+      camera_parameters = \
+         camera.initialize(station_parameters, verbose=verbose)
+      if camera_parameters:
+         camera_parameters_pickup_successful = True
+         previous_camera_parameters = camera_parameters
+      else:
+         camera_parameters_pickup_successful = False
+         if initial_startup:
+            msg = '... exiting'
+            msg += '\n'
+            sys.stderr.write(msg)
+            sys.stderr.flush()
+            sys.exit()
+         else:
+            msg = '... using previous camera parameters'
+            msg += '\n'
+            sys.stdout.write(msg)
+            sys.stdout.flush()
+            camera_parameters = previous_camera_parameters
+
    # Check the efficacy of certain parameters
    if station_parameters['cameraPowerOnOffset'] > 0:
       msg = '*** ERROR *** Camera power on offset must be negative'
@@ -421,7 +447,7 @@ while True:
                sys.stdout.write(msg)
                sys.stdout.flush()
             camera.power_off(station_parameters,
-                             shutdown_duration=0,
+                             shutdown_duration=5,
                              verbose=verbose)
             if verbose:
                msg = '\n'
@@ -450,6 +476,16 @@ while True:
             # Initialize the camera
             camera_parameters = \
                camera.initialize(station_parameters, verbose=verbose)
+            if camera_parameters:
+               camera_parameters_pickup_successful = True
+               previous_camera_parameters = camera_parameters
+            else:
+               camera_parameters_pickup_successful = False
+               msg = '... using previous camera parameters'
+               msg += '\n'
+               sys.stdout.write(msg)
+               sys.stdout.flush()
+               camera_parameters = previous_camera_parameters
             if verbose:
                msg = '\n'
                sys.stdout.write(msg)
@@ -552,7 +588,7 @@ while True:
       # Power on the camera (keep it powered when script is not running)
       if verbose:
          msg = '\n'
-         msg += 'Powering on the camera (to keep settings active) ...'
+         msg += 'Powering on the camera (to maintain settings) ...'
          msg += '\n'
          sys.stdout.write(msg)
          sys.stdout.flush()
