@@ -77,7 +77,7 @@ def voltage(station_parameters,
                msg += voltmeterLabel
                msg += ': '
                v = voltages[voltmeterLabels.index(voltmeterLabel)]
-               msg += '{0:.2f}'.format(v) if v else 'n/a'
+               msg += '{0:.2f}'.format(v) if v else 0
                msg += '\n'
          msg += '\n'
          sys.stdout.write(msg)
@@ -93,7 +93,7 @@ def voltage(station_parameters,
          if voltmeterLabel:
             v = voltages[voltmeterLabels.index(voltmeterLabel)]
             msg += ','
-            msg += '{0:.2f}'.format(v) if v else 'n/a'
+            msg += '{0:.2f}'.format(v) if v else 0
       msg += '\n'
       if os.path.isfile(log_filename):
          f = open(log_filename, 'a')
