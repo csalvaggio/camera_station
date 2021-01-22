@@ -18,18 +18,19 @@ def power_on_gphoto2_camera(startup_duration=15,
 
       # Delay for the specified amount of time while camera goes through
       # its' boot sequence
-      for second in range(startup_duration):
-         time.sleep(1)
+      if startup_duration:
+         for second in range(startup_duration):
+            time.sleep(1)
+            if verbose:
+               msg = '... waiting '
+               msg += '{0:2d} [s]'.format(startup_duration - second - 1)
+               msg += '\r'
+               sys.stdout.write(msg)
+               sys.stdout.flush()
          if verbose:
-            msg = '... waiting '
-            msg += '{0:2d} [s]'.format(startup_duration - second - 1)
-            msg += '\r'
+            msg = '\n'
             sys.stdout.write(msg)
             sys.stdout.flush()
-      if verbose:
-         msg = '\n'
-         sys.stdout.write(msg)
-         sys.stdout.flush()
 
       # Discard the switch
       switch.close()

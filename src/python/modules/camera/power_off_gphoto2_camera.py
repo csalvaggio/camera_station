@@ -17,18 +17,19 @@ def power_off_gphoto2_camera(shutdown_duration=15,
       switch.position(0)
 
       # Keep the camera powered off for the specified amount of time
-      for second in range(shutdown_duration):
-         time.sleep(1)
+      if shutdown_duration:
+         for second in range(shutdown_duration):
+            time.sleep(1)
+            if verbose:
+               msg = '... waiting '
+               msg += '{0:2d} [s]'.format(shutdown_duration - second - 1)
+               msg += '\r'
+               sys.stdout.write(msg)
+               sys.stdout.flush()
          if verbose:
-            msg = '... waiting '
-            msg += '{0:2d} [s]'.format(shutdown_duration - second - 1)
-            msg += '\r'
+            msg = '\n'
             sys.stdout.write(msg)
             sys.stdout.flush()
-      if verbose:
-         msg = '\n'
-         sys.stdout.write(msg)
-         sys.stdout.flush()
 
       # Discard the switch
       switch.close()

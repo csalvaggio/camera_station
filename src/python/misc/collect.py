@@ -49,8 +49,8 @@ dump_station_parameters_database = args.dump_station_parameters_database
 initial_startup = True
 upload_successful = False
 files_uploaded = 0
-event_offset = 60
-camera_power_on_offset = -30
+
+camera_parameters = None
 
 while True:
    # Pick up the latest parameters from the databases
@@ -123,6 +123,38 @@ while True:
             sys.stdout.write(msg)
             sys.stdout.flush()
             hardware_parameters = previous_hardware_parameters
+
+   # Check the efficacy of certain parameters
+   if station_parameters['cameraPowerOnOffset'] > 0:
+      msg = '*** ERROR *** Camera power on offset must be negative'
+      msg += '\n'
+      sys.stderr.write(msg)
+      sys.stderr.flush()
+      sys.exit()
+
+   if station_parameters['cameraPowerOffOffset'] > 0:
+      msg = '*** ERROR *** Camera power off offset must be negative'
+      msg += '\n'
+      sys.stderr.write(msg)
+      sys.stderr.flush()
+      sys.exit()
+
+   if station_parameters['cameraPowerOnOffset'] < \
+               (station_parameters['cameraPowerOffOffset'] + 10):
+      msg = '*** ERROR *** Camera power off offset must be at least 10 seconds'
+      msg += '\n'
+      msg += '             less than the camera power on offset'
+      msg += '\n'
+      sys.stderr.write(msg)
+      sys.stderr.flush()
+      sys.exit()
+
+   if station_parameters['eventOffset'] < 60:
+      msg = '*** ERROR *** Event offset must be at least 60 seconds'
+      msg += '\n'
+      sys.stderr.write(msg)
+      sys.stderr.flush()
+      sys.exit()
 
    # Parse the database boolean parameters that need language-specific
    # interpretation
@@ -279,14 +311,14 @@ while True:
          # If it is the scheduled time, break out of the triggering loop
          # to pick up the latest camera station parameters
          update_time = station_parameters['updateHour'] * 3600
-         update_time += event_offset
+         update_time += station_parameters['eventOffset']
          if seconds_since_midnight == update_time:
             time.sleep(1)
             break
 
          # If it is the scheduled time, send a system health e-mail
          health_email_time = station_parameters['healthEmailHour'] * 3600
-         health_email_time += event_offset
+         health_email_time += station_parameters['eventOffset']
          if seconds_since_midnight == health_email_time:
             if verbose:
                msg = 'Sending a system health e-mail ...'
@@ -308,7 +340,7 @@ while True:
 
          # If it is the scheduled time, upload daily imagery to the server
          upload_time = station_parameters['uploadHour'] * 3600
-         upload_time += event_offset
+         upload_time += station_parameters['eventOffset']
          if seconds_since_midnight == upload_time:
             if verbose:
                msg = 'Performing the daily imagery upload ...'
@@ -373,35 +405,57 @@ while True:
          hour = seconds_since_midnight // 3600
          trigger_frequency = hourly_parameters['triggerFrequency'][hour]
 
+         # If it is the scheduled time, turn the camera power off
+         camera_power_off_time = \
+            seconds_since_midnight - station_parameters['cameraPowerOffOffset']
+         if camera_power_off_time % trigger_frequency == 0:
+            if camera_parameters:
+               # Close the camera connection
+               camera.close(station_parameters,
+                            camera_parameters,
+                            verbose=verbose)
+            # Power off the camera
+            if verbose:
+               msg = 'Powering off the camera ...'
+               msg += '\n'
+               sys.stdout.write(msg)
+               sys.stdout.flush()
+            camera.power_off(station_parameters,
+                             shutdown_duration=0,
+                             verbose=verbose)
+            if verbose:
+               msg = '\n'
+               sys.stdout.write(msg)
+               sys.stdout.flush()
+            time.sleep(1)
+            continue
+
          # If it is the scheduled time, turn the camera power on
-         camera_power_on_time = seconds_since_midnight - camera_power_on_offset
+         camera_power_on_time = \
+            seconds_since_midnight - station_parameters['cameraPowerOnOffset']
          if camera_power_on_time % trigger_frequency == 0:
-            if station_parameters['skipEvening']:
-               if not clock.is_evening(iso8601_time_string,
-                                       station_parameters['longitude'],
-                                       station_parameters['latitude']):
-                  if verbose:
-                     msg = 'Powering on the camera ...'
-                     msg += '\n'
-                     sys.stdout.write(msg)
-                     sys.stdout.flush()
-                  # Power on the camera
-                  camera.power_on(station_parameters,
-                                  startup_duration=15,
-                                  verbose=verbose)
-                  if verbose:
-                     msg = '\n'
-                     sys.stdout.write(msg)
-                     sys.stdout.flush()
-                  # Initialize the camera
-                  camera_parameters = \
-                     camera.initialize(station_parameters, verbose=verbose)
-                  if verbose:
-                     msg = '\n'
-                     sys.stdout.write(msg)
-                     sys.stdout.flush()
-                  time.sleep(1)
-                  continue
+            if verbose:
+               msg = 'Powering on the camera ...'
+               msg += '\n'
+               sys.stdout.write(msg)
+               sys.stdout.flush()
+            # Power on the camera
+            camera.power_on(station_parameters,
+                            startup_duration=15,
+                            verbose=verbose)
+            if verbose:
+               msg = '\n'
+               sys.stdout.write(msg)
+               sys.stdout.flush()
+            # Initialize the camera
+            camera_parameters = \
+               camera.initialize(station_parameters, verbose=verbose)
+            if verbose:
+               msg = '\n'
+               sys.stdout.write(msg)
+               sys.stdout.flush()
+            time.sleep(1)
+            continue
 
          # If it is the next triggering time, begin that process
          if seconds_since_midnight % trigger_frequency == 0:
@@ -477,26 +531,6 @@ while True:
                               local_basename,
                               verbose=verbose)
 
-            # Close the camera connection
-            camera.close(station_parameters,
-                         camera_parameters,
-                         verbose=verbose)
-
-            # Power off the camera
-            if verbose:
-               msg = 'Powering off the camera ...'
-               msg += '\n'
-               sys.stdout.write(msg)
-               sys.stdout.flush()
-            camera.power_off(station_parameters,
-                             shutdown_duration=5,
-                             verbose=verbose)
-            if verbose:
-               msg = '\n'
-               sys.stdout.write(msg)
-               sys.stdout.flush()
-            time.sleep(1)
-
             # Log the enclosure's interior temperature and relative
             # humidity and send SMS alert if either is out of it's
             # acceptable range
@@ -515,6 +549,16 @@ while True:
                            verbose=verbose)
 
    except KeyboardInterrupt:
+      # Power on the camera (keep it powered when script is not running)
+      if verbose:
+         msg = 'Powering on the camera (to keep settings active) ...'
+         msg += '\n'
+         sys.stdout.write(msg)
+         sys.stdout.flush()
+      camera.power_on(station_parameters,
+                      startup_duration=0,
+                      verbose=verbose)
+
       if verbose:
          msg = '\n'
          msg += 'Exiting ...'
