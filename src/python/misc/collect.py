@@ -551,7 +551,8 @@ while True:
    except KeyboardInterrupt:
       # Power on the camera (keep it powered when script is not running)
       if verbose:
-         msg = 'Powering on the camera (to keep settings active) ...'
+         msg = '\n'
+         msg += 'Powering on the camera (to keep settings active) ...'
          msg += '\n'
          sys.stdout.write(msg)
          sys.stdout.flush()
