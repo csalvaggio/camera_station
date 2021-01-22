@@ -94,7 +94,7 @@ def send_health_email(station_parameters,
             message += voltmeterLabel
             message += ': '
             v = voltages[voltmeterLabels.index(voltmeterLabel)]
-            message += '{0:.2f}'.format(v) if v else 'n/a'
+            message += '{0:.2f}'.format(v) if v else '0.00'
             message += '\n'
       message += '\n'
    message += station_parameters['temperatureLabel']
