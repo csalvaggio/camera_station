@@ -74,6 +74,9 @@ def temperature_humidity(data_pin=14,
 
    dht.exit()
 
+   if temperature_c < 0:
+      temperature_c = -((temperature_c*10) % (2**15 - 1)) / 10
+
    if temperature_units.lower() == 'c':
       temperature = temperature_c
    elif temperature_units.lower() == 'f':
