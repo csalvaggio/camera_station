@@ -103,15 +103,16 @@ def voltage(station_parameters,
       # Send a voltage warning SMS (if necessary) based on the first
       # voltage channel's value
       if alert:
-         v = voltages[station_parameters['voltageWarningChannel'] - 1]
-         if v < station_parameters['lowVoltageWarning'] or \
-            v > station_parameters['highVoltageWarning']:
-            if verbose:
-               msg = 'Sending a voltage warning SMS ...'
-               msg += '\n'
-               msg += '\n'
-               sys.stdout.write(msg)
-               sys.stdout.flush()
-            utils.send_voltage_warning_sms(station_parameters)
+         if not station_parameters['doNotDisturb']:
+            v = voltages[station_parameters['voltageWarningChannel'] - 1]
+            if v < station_parameters['lowVoltageWarning'] or \
+               v > station_parameters['highVoltageWarning']:
+               if verbose:
+                  msg = 'Sending a voltage warning SMS ...'
+                  msg += '\n'
+                  msg += '\n'
+                  sys.stdout.write(msg)
+                  sys.stdout.flush()
+               utils.send_voltage_warning_sms(station_parameters)
 
    return voltages

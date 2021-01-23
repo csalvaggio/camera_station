@@ -189,6 +189,11 @@ while True:
    else:
       station_parameters['skipEvening'] = False
 
+   if station_parameters['doNotDisturb'].lower() == 'true':
+      station_parameters['doNotDisturb'] = True
+   else:
+      station_parameters['doNotDisturb'] = False
+
    # Convert e-mail receivers from a string to a list
    receivers = station_parameters['emailReceivers']
    station_parameters['emailReceivers'] = receivers.split('|')

@@ -19,6 +19,7 @@ def get_station_parameters(verbose=False):
                 'latitude',
                 'longitude',
                 'skipEvening',
+                'doNotDisturb',
                 'lowTemperatureWarning',
                 'highTemperatureWarning',
                 'temperatureLabel',

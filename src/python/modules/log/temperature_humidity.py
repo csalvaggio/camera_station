@@ -89,25 +89,27 @@ def temperature_humidity(station_parameters,
 
       if alert:
          # Send a temperature warning SMS (if necessary)
-         if temperature < station_parameters['lowTemperatureWarning'] or \
-            temperature > station_parameters['highTemperatureWarning']:
-            if verbose:
-               msg = 'Sending a temperature warning SMS ...'
-               msg += '\n'
-               msg += '\n'
-               sys.stdout.write(msg)
-               sys.stdout.flush()
-            utils.send_temperature_warning_sms(station_parameters)
+         if not station_parameters['doNotDisturb']:
+            if temperature < station_parameters['lowTemperatureWarning'] or \
+               temperature > station_parameters['highTemperatureWarning']:
+               if verbose:
+                  msg = 'Sending a temperature warning SMS ...'
+                  msg += '\n'
+                  msg += '\n'
+                  sys.stdout.write(msg)
+                  sys.stdout.flush()
+               utils.send_temperature_warning_sms(station_parameters)
 
          # Send a humidity warning SMS (if necessary)
-         if humidity < station_parameters['lowHumidityWarning'] or \
-            humidity > station_parameters['highHumidityWarning']:
-            if verbose:
-               msg = 'Sending a humidity warning SMS ...'
-               msg += '\n'
-               msg += '\n'
-               sys.stdout.write(msg)
-               sys.stdout.flush()
-            utils.send_humidity_warning_sms(station_parameters)
+         if not station_parameters['doNotDisturb']:
+            if humidity < station_parameters['lowHumidityWarning'] or \
+               humidity > station_parameters['highHumidityWarning']:
+               if verbose:
+                  msg = 'Sending a humidity warning SMS ...'
+                  msg += '\n'
+                  msg += '\n'
+                  sys.stdout.write(msg)
+                  sys.stdout.flush()
+               utils.send_humidity_warning_sms(station_parameters)
 
    return temperature, humidity
