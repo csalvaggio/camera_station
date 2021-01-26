@@ -124,32 +124,6 @@ while True:
             sys.stdout.flush()
             hardware_parameters = previous_hardware_parameters
 
-      camera.power_off(station_parameters,
-                       shutdown_duration=5,
-                       verbose=verbose)
-      camera.power_on(station_parameters,
-                      startup_duration=15,
-                      verbose=verbose)
-      camera_parameters = \
-         camera.initialize(station_parameters, verbose=verbose)
-      if camera_parameters:
-         camera_parameters_pickup_successful = True
-         previous_camera_parameters = camera_parameters
-      else:
-         camera_parameters_pickup_successful = False
-         if initial_startup:
-            msg = '... exiting'
-            msg += '\n'
-            sys.stderr.write(msg)
-            sys.stderr.flush()
-            sys.exit()
-         else:
-            msg = '... using previous camera parameters'
-            msg += '\n'
-            sys.stdout.write(msg)
-            sys.stdout.flush()
-            camera_parameters = previous_camera_parameters
-
    # Check the efficacy of certain parameters
    if station_parameters['cameraPowerOnOffset'] > 0:
       msg = '*** ERROR *** Camera power on offset must be negative'
@@ -160,16 +134,6 @@ while True:
 
    if station_parameters['cameraPowerOffOffset'] > 0:
       msg = '*** ERROR *** Camera power off offset must be negative'
-      msg += '\n'
-      sys.stderr.write(msg)
-      sys.stderr.flush()
-      sys.exit()
-
-   if station_parameters['cameraPowerOnOffset'] < \
-               (station_parameters['cameraPowerOffOffset'] + 10):
-      msg = '*** ERROR *** Camera power off offset must be at least 10 seconds'
-      msg += '\n'
-      msg += '             less than the camera power on offset'
       msg += '\n'
       sys.stderr.write(msg)
       sys.stderr.flush()
@@ -264,6 +228,39 @@ while True:
          sys.stdout.write(msg)
          sys.stdout.flush()
       os.mkdir(logs_directory)
+
+   # If the time offsets for powering off the camera and powering on the
+   # camera are not equal, then power off the camera so that a power cycle
+   # of the camera will occur
+   if station_parameters['cameraPowerOffOffset'] != \
+                             station_parameters['cameraPowerOnOffset']:
+      camera.power_off(station_parameters,
+                       shutdown_duration=5,
+                       verbose=verbose)
+
+   camera.power_on(station_parameters,
+                   startup_duration=15,
+                   verbose=verbose)
+
+   camera_parameters = \
+      camera.initialize(station_parameters, verbose=verbose)
+   if camera_parameters:
+      camera_parameters_pickup_successful = True
+      previous_camera_parameters = camera_parameters
+   else:
+      camera_parameters_pickup_successful = False
+      if initial_startup:
+         msg = '... exiting'
+         msg += '\n'
+         sys.stderr.write(msg)
+         sys.stderr.flush()
+         sys.exit()
+      else:
+         msg = '... using previous camera parameters'
+         msg += '\n'
+         sys.stdout.write(msg)
+         sys.stdout.flush()
+         camera_parameters = previous_camera_parameters
 
    # Perform startup only actions
    if initial_startup:
@@ -436,68 +433,6 @@ while True:
          hour = seconds_since_midnight // 3600
          trigger_frequency = hourly_parameters['triggerFrequency'][hour]
 
-         # If it is the scheduled time, turn the camera power off
-         camera_power_off_time = \
-            seconds_since_midnight - station_parameters['cameraPowerOffOffset']
-         if camera_power_off_time % trigger_frequency == 0:
-            if camera_parameters:
-               # Close the camera connection
-               camera.close(station_parameters,
-                            camera_parameters,
-                            verbose=verbose)
-            # Power off the camera
-            if verbose:
-               msg = 'Powering off the camera ...'
-               msg += '\n'
-               sys.stdout.write(msg)
-               sys.stdout.flush()
-            camera.power_off(station_parameters,
-                             shutdown_duration=5,
-                             verbose=verbose)
-            if verbose:
-               msg = '\n'
-               sys.stdout.write(msg)
-               sys.stdout.flush()
-            time.sleep(1)
-            continue
-
-         # If it is the scheduled time, turn the camera power on
-         camera_power_on_time = \
-            seconds_since_midnight - station_parameters['cameraPowerOnOffset']
-         if camera_power_on_time % trigger_frequency == 0:
-            if verbose:
-               msg = 'Powering on the camera ...'
-               msg += '\n'
-               sys.stdout.write(msg)
-               sys.stdout.flush()
-            # Power on the camera
-            camera.power_on(station_parameters,
-                            startup_duration=15,
-                            verbose=verbose)
-            if verbose:
-               msg = '\n'
-               sys.stdout.write(msg)
-               sys.stdout.flush()
-            # Initialize the camera
-            camera_parameters = \
-               camera.initialize(station_parameters, verbose=verbose)
-            if camera_parameters:
-               camera_parameters_pickup_successful = True
-               previous_camera_parameters = camera_parameters
-            else:
-               camera_parameters_pickup_successful = False
-               msg = '... using previous camera parameters'
-               msg += '\n'
-               sys.stdout.write(msg)
-               sys.stdout.flush()
-               camera_parameters = previous_camera_parameters
-            if verbose:
-               msg = '\n'
-               sys.stdout.write(msg)
-               sys.stdout.flush()
-            time.sleep(1)
-            continue
-
          # If it is the next triggering time, begin that process
          if seconds_since_midnight % trigger_frequency == 0:
             # Report the trigger time
@@ -588,6 +523,71 @@ while True:
                            iso8601_time_string,
                            alert=True,
                            verbose=verbose)
+
+            time.sleep(1)
+            continue
+
+         # If it is the scheduled time, turn the camera power on
+         camera_power_on_time = \
+            seconds_since_midnight - station_parameters['cameraPowerOnOffset']
+         if camera_power_on_time % trigger_frequency == 0:
+            if verbose:
+               msg = 'Powering on the camera ...'
+               msg += '\n'
+               sys.stdout.write(msg)
+               sys.stdout.flush()
+            # Power on the camera
+            camera.power_on(station_parameters,
+                            startup_duration=15,
+                            verbose=verbose)
+            if verbose:
+               msg = '\n'
+               sys.stdout.write(msg)
+               sys.stdout.flush()
+            # Initialize the camera
+            camera_parameters = \
+               camera.initialize(station_parameters, verbose=verbose)
+            if camera_parameters:
+               camera_parameters_pickup_successful = True
+               previous_camera_parameters = camera_parameters
+            else:
+               camera_parameters_pickup_successful = False
+               msg = '... using previous camera parameters'
+               msg += '\n'
+               sys.stdout.write(msg)
+               sys.stdout.flush()
+               camera_parameters = previous_camera_parameters
+            if verbose:
+               msg = '\n'
+               sys.stdout.write(msg)
+               sys.stdout.flush()
+            time.sleep(1)
+            continue
+
+         # If it is the scheduled time, turn the camera power off
+         camera_power_off_time = \
+            seconds_since_midnight - station_parameters['cameraPowerOffOffset']
+         if camera_power_off_time % trigger_frequency == 0:
+            if camera_parameters:
+               # Close the camera connection
+               camera.close(station_parameters,
+                            camera_parameters,
+                            verbose=verbose)
+            # Power off the camera
+            if verbose:
+               msg = 'Powering off the camera ...'
+               msg += '\n'
+               sys.stdout.write(msg)
+               sys.stdout.flush()
+            camera.power_off(station_parameters,
+                             shutdown_duration=5,
+                             verbose=verbose)
+            if verbose:
+               msg = '\n'
+               sys.stdout.write(msg)
+               sys.stdout.flush()
+            time.sleep(1)
+            continue
 
    except KeyboardInterrupt:
       # Power on the camera (keep it powered when script is not running)
