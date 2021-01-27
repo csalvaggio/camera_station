@@ -313,16 +313,12 @@ while True:
                               hourly_parameters_pickup_successful,
                               hardware_parameters_pickup_successful)
 
-      if verbose:
-         msg = '\n'
-         sys.stdout.write(msg)
-         sys.stdout.flush()
-
       initial_startup = False
 
    # Repeatedly trigger the camera
    if verbose:
-      msg = 'Waiting for first trigger ...'
+      msg = '\n'
+      msg += 'Waiting for first trigger ...'
       msg += '\n'
       msg += '\n'
       sys.stdout.write(msg)
@@ -353,8 +349,12 @@ while True:
                          camera_parameters,
                          verbose=verbose)
             camera.power_off(station_parameters,
-                             shutdown_duration=0,
+                             shutdown_duration=5,
                              verbose=verbose)
+            if verbose:
+               msg = '\n'
+               sys.stdout.write(msg)
+               sys.stdout.flush()
             time.sleep(1)
             break
 
