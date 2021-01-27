@@ -344,6 +344,17 @@ while True:
          update_time = station_parameters['updateHour'] * 3600
          update_time += station_parameters['eventOffset']
          if seconds_since_midnight == update_time:
+            if verbose:
+               msg = 'Turning off the camera ...'
+               msg += '\n'
+               sys.stdout.write(msg)
+               sys.stdout.flush()
+            camera.close(station_parameters,
+                         camera_parameters,
+                         verbose=verbose)
+            camera.power_off(station_parameters,
+                             shutdown_duration=0,
+                             verbose=verbose)
             time.sleep(1)
             break
 
