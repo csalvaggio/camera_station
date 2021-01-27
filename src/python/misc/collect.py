@@ -139,6 +139,11 @@ while True:
       sys.stderr.flush()
       sys.exit()
 
+   if station_parameters['cameraPowerOffOffset'] == \
+                             station_parameters['cameraPowerOnOffset']:
+      station_parameters['cameraPowerOffOffset'] = 0
+      station_parameters['cameraPowerOnOffset'] = 0
+
    if station_parameters['eventOffset'] < 60:
       msg = '*** ERROR *** Event offset must be at least 60 seconds'
       msg += '\n'
@@ -229,19 +234,17 @@ while True:
          sys.stdout.flush()
       os.mkdir(logs_directory)
 
-   # If the time offsets for powering off the camera and powering on the
-   # camera are not equal, then power off the camera so that a power cycle
-   # of the camera will occur
-   if station_parameters['cameraPowerOffOffset'] != \
-                             station_parameters['cameraPowerOnOffset']:
-      camera.power_off(station_parameters,
-                       shutdown_duration=5,
-                       verbose=verbose)
-
+   # Power on the camera
+   if verbose:
+      msg = 'Turning on the camera ...'
+      msg += '\n'
+      sys.stdout.write(msg)
+      sys.stdout.flush()
    camera.power_on(station_parameters,
                    startup_duration=15,
                    verbose=verbose)
 
+   # Initialize the camera
    camera_parameters = \
       camera.initialize(station_parameters, verbose=verbose)
    if camera_parameters:
@@ -580,7 +583,7 @@ while True:
                sys.stdout.write(msg)
                sys.stdout.flush()
             camera.power_off(station_parameters,
-                             shutdown_duration=5,
+                             shutdown_duration=0,
                              verbose=verbose)
             if verbose:
                msg = '\n'
@@ -590,16 +593,19 @@ while True:
             continue
 
    except KeyboardInterrupt:
-      # Power on the camera (keep it powered when script is not running)
+      # Close the camera connection and power off the camera
       if verbose:
          msg = '\n'
-         msg += 'Powering on the camera (to maintain settings) ...'
+         msg += 'Turning off the camera ...'
          msg += '\n'
          sys.stdout.write(msg)
          sys.stdout.flush()
-      camera.power_on(station_parameters,
-                      startup_duration=0,
-                      verbose=verbose)
+      camera.close(station_parameters,
+                   camera_parameters,
+                   verbose=False)
+      camera.power_off(station_parameters,
+                       shutdown_duration=0,
+                       verbose=False)
 
       if verbose:
          msg = '\n'

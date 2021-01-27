@@ -192,7 +192,13 @@ class Voltmeter(object):
          return voltage
 
    def close(self):
-      RPi.GPIO.cleanup()
+      # Cleaning up/resetting the GPIO pins to some default state has
+      # unforeseen consequences on other devices, so to avoid this,
+      # even though it seems prudent to do this when dicarding the
+      # voltmeter object, do not call the GPIO clenup routine at this
+      # point in the process
+      #RPi.GPIO.cleanup()
+      pass
 
 
 
