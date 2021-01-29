@@ -173,7 +173,7 @@ if __name__ == '__main__':
    msg = 'Creating switch ...'
    msg += '\n'
    sys.stdout.write(msg)
-   switch = power.Switch(control_pin=21, load_connection='no')
+   switch = power.Switch(control_pin=21, load_connection='nc')
    time.sleep(5)
 
    msg = 'Turning switch {0}'.format(desired_state)

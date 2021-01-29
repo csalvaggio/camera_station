@@ -348,9 +348,9 @@ while True:
             camera.close(station_parameters,
                          camera_parameters,
                          verbose=verbose)
-            camera.power_off(station_parameters,
-                             shutdown_duration=5,
-                             verbose=verbose)
+#            camera.power_off(station_parameters,
+#                             shutdown_duration=5,
+#                             verbose=verbose)
             if verbose:
                msg = '\n'
                sys.stdout.write(msg)
@@ -614,9 +614,9 @@ while True:
       camera.close(station_parameters,
                    camera_parameters,
                    verbose=False)
-      camera.power_off(station_parameters,
-                       shutdown_duration=0,
-                       verbose=False)
+#      camera.power_off(station_parameters,
+#                       shutdown_duration=0,
+#                       verbose=False)
 
       if verbose:
          msg = '\n'

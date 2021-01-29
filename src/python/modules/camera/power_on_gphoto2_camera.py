@@ -7,7 +7,7 @@ def power_on_gphoto2_camera(startup_duration=15,
                             verbose=False):
    try:
       # Instantiate a switch
-      switch = power.Switch(control_pin=21, load_connection='no')
+      switch = power.Switch(control_pin=21, load_connection='nc')
 
       # Physically power on the camera
       if verbose:

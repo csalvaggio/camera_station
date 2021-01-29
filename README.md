@@ -227,7 +227,7 @@ This repository contains the ``/home/pi`` folder for the Raspberry Pi appliance 
 ## CANON M100 SETUP
 After doing a factory reset on the Canon M100 camera, 
 
-### TOOL/4
+### SET UP/4
 * Reset camera > Basic settings > OK
 * Reset camera > Other settings > Flash settings > OK
 * Reset camera > Other settings > Copyright info > OK
@@ -236,39 +236,44 @@ After doing a factory reset on the Canon M100 camera,
 
 modify the following settings using the camera's setup menus.
 
-### CAMERA/1
-* Rec. Mode > Tv
+### DISPLAY LEVEL/1
+* Menu display > Standard
+
+### SHOOT/1
+* Shooting mode > Tv
 * Image quality > RAW
 
-### CAMERA/2
-* Image review > 2 sec.
-
-### CAMERA/3
-* AF operation > ONE SHOT
-* Continuous AF > Disable
-
-### CAMERA/4
-
-### CAMERA/5
-* ISO speed > AUTO
-
-### CAMERA/6
-
-### CAMERA/7
+### SHOOT/2
 * Drive mode > Single shooting
+* ISO speed setting > ISO speed > Auto
 
-### CAMERA/8
+### SHOOT/3
+* Metering mode > Center-weighted average
 
-### TOOL/1
-* Create Folder > Monthly
-* File Numbering > Continuous
-* Format  > Low Level Format (check) > OK > OK
+### SHOOT/4
 
-### TOOL/2
-* Eco Mode > Off
-* Power Saving > Display Off > 15 sec.
-* Power Saving > Auto Power Down > Disable
-* Disp. Brightness (turn all the way down)
+### SHOOT/5
 
-### TOOL/3
-* Screen auto-lock settings > Screen auto lock > Disable
+### SHOOT/6
+* AF operation > ONE SHOT AF
+* AF method > 1-point AF
+* Continuous AF > Disable
+* Focus mode > MF
+
+### SHOOT/7
+* AF-assist beam firing > OFF
+
+### SHOOT/8
+
+### SET UP/1
+* Format  > Low level format (checked) > OK > OK
+
+### SET UP/2
+* Eco mode > Off
+* Power saving > Display off > 15 sec.
+* Power saving > Auto power off > Disable
+* Disp. brightness > (turn all the way down) > OK
+
+### SET UP/3
+
+### SET UP/4

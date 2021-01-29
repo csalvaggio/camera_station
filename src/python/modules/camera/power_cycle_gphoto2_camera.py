@@ -8,7 +8,7 @@ def power_cycle_gphoto2_camera(shutdown_duration=15,
                                verbose=False):
    try:
       # Instantiate a switch
-      switch = power.Switch(control_pin=21, load_connection='no')
+      switch = power.Switch(control_pin=21, load_connection='nc')
 
       # Physically power off the camera
       if verbose:
