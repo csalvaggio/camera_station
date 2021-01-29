@@ -235,14 +235,14 @@ while True:
       os.mkdir(logs_directory)
 
    # Power on the camera
-   if verbose:
-      msg = 'Turning on the camera ...'
-      msg += '\n'
-      sys.stdout.write(msg)
-      sys.stdout.flush()
-   camera.power_on(station_parameters,
-                   startup_duration=15,
-                   verbose=verbose)
+#   if verbose:
+#      msg = 'Turning on the camera ...'
+#      msg += '\n'
+#      sys.stdout.write(msg)
+#      sys.stdout.flush()
+#   camera.power_on(station_parameters,
+#                   startup_duration=15,
+#                   verbose=verbose)
 
    # Initialize the camera
    camera_parameters = \

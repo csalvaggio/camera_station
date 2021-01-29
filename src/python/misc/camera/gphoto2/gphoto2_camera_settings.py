@@ -1,6 +1,7 @@
 import copy
 import os.path
 import sys
+import time
 
 import gphoto2 as gp
 
@@ -62,6 +63,7 @@ if __name__ == '__main__':
    sys.stdout.flush()
    config = get_camera_config(camera)
    print_camera_config(config)
+   time.sleep(5)
 
    msg = separator
    msg += 'PERFORMING CONFIGURATION UPDATE'
@@ -87,6 +89,7 @@ if __name__ == '__main__':
    # meteringmode <class 'str'>
    #config['capturesettings']['meteringmode']['value'] = 'Spot'
    set_camera_config(camera, config)
+   time.sleep(5)
 
    msg = separator
    msg += 'AFTER CONFIGURATION UPDATE'
@@ -96,6 +99,7 @@ if __name__ == '__main__':
    sys.stdout.flush()
    config = get_camera_config(camera)
    print_camera_config(config)
+   time.sleep(5)
 
    msg = separator
    msg += 'CAPTURING IMAGE'
@@ -114,6 +118,7 @@ if __name__ == '__main__':
    local_filepath = os.path.join(home, filename)
    camera_file.save(local_filepath)
    camera.file_delete(camera_filepath.folder, camera_filepath.name)
+   time.sleep(5)
 
    msg = separator
    msg += 'RESTORING ORIGINAL CONFIGURATION'
@@ -139,6 +144,7 @@ if __name__ == '__main__':
    # meteringmode <class 'str'>
    #config['capturesettings']['meteringmode']['value'] = 'Evaluative'
    set_camera_config(camera, config)
+   time.sleep(5)
 
    msg = separator
    msg += 'AFTER RESTORING CONFIGURATION'
