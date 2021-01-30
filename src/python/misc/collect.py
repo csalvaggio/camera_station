@@ -163,6 +163,11 @@ while True:
    else:
       station_parameters['doNotDisturb'] = False
 
+   if station_parameters['allowPowerCycle'].lower() == 'true':
+      station_parameters['allowPowerCycle'] = True
+   else:
+      station_parameters['allowPowerCycle'] = False
+
    # Convert e-mail receivers from a string to a list
    receivers = station_parameters['emailReceivers']
    station_parameters['emailReceivers'] = receivers.split('|')
@@ -537,6 +542,63 @@ while True:
                            iso8601_time_string,
                            alert=True,
                            verbose=verbose)
+
+            # Check the capture status and power cycle (reset) the camera
+            # if permitted and necessary
+            if station_parameters['allowPowerCycle'] and capture_status == 0:
+               if verbose:
+                  msg = 'Attempting a camera re-initialization ...'
+                  msg += '\n'
+                  sys.stdout.write(msg)
+                  sys.stdout.flush()
+
+               # Close the camera connection
+               camera.close(station_parameters,
+                            camera_parameters,
+                            verbose=verbose)
+
+               # Power cycle the camera
+               if verbose:
+                  msg = 'Power cycling the camera ...'
+                  msg += '\n'
+                  sys.stdout.write(msg)
+                  sys.stdout.flush()
+               camera.power_cycle(station_parameters,
+                                  shutdown_duration=15,
+                                  startup_duration=15,
+                                  verbose=verbose)
+               if verbose:
+                  msg = '\n'
+                  sys.stdout.write(msg)
+                  sys.stdout.flush()
+
+               # Re-initialize the camera
+               camera_parameters = \
+                  camera.initialize(station_parameters, verbose=verbose)
+
+               # Send a power cycle alert e-mail
+               if verbose:
+                  msg = 'Sending a power cycle alert e-mail ...'
+                  msg += '\n'
+                  sys.stdout.write(msg)
+                  sys.stdout.flush()
+               utils.send_power_cycle_email(station_parameters)
+
+               # Send a power cycle alert SMS
+               if verbose:
+                  msg = 'Sending a power cycle alert SMS ...'
+                  msg += '\n'
+                  sys.stdout.write(msg)
+                  sys.stdout.flush()
+               utils.send_power_cycle_sms(station_parameters)
+
+               if verbose:
+                  msg = '\n'
+                  msg += 'Waiting for next trigger ...'
+                  msg += '\n'
+                  msg += '\n'
+                  sys.stdout.write(msg)
+                  sys.stdout.flush()
 
             time.sleep(1)
             continue

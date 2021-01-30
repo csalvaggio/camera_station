@@ -43,6 +43,7 @@ def get_station_parameters(verbose=False):
                 'eventOffset',
                 'cameraPowerOffOffset',
                 'cameraPowerOnOffset',
+                'allowPowerCycle',
                 'emailSender',
                 'emailReceivers',
                 'smsSender',
