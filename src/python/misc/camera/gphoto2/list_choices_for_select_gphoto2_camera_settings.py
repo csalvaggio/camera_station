@@ -4,8 +4,9 @@ import gphoto2 as gp
 
 items = \
    [
-    'syncdatetime',
     'syncdatetimeutc',
+    'syncdatetime',
+    'reviewtime',
     'autopoweroff',
     'capturetarget',
     'imageformat',

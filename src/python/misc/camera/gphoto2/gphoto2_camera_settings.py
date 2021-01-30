@@ -7,38 +7,42 @@ import gphoto2 as gp
 
 def get_camera_config(camera):
    config = camera.get_config()
-   d = {}
+   config_dictionary = {}
    for category_index in range(config.count_children()):
       category = config.get_child(category_index)
-      d[category.get_name()] = {}
+      config_dictionary[category.get_name()] = {}
       for item_index in range(category.count_children()):
          item = category.get_child(item_index)
-         d[category.get_name()][item.get_name()] = {}
-         d[category.get_name()][item.get_name()]['label'] = item.get_label()
-         d[category.get_name()][item.get_name()]['value'] = item.get_value()
-   return d
+         config_dictionary[category.get_name()][item.get_name()] = \
+            {}
+         config_dictionary[category.get_name()][item.get_name()]['label'] = \
+            item.get_label()
+         config_dictionary[category.get_name()][item.get_name()]['value'] = \
+            item.get_value()
+   return config_dictionary
 
-def set_camera_config(camera, config):
-   c = camera.get_config()
-   for category in config:
+def set_camera_config(camera, config_dictionary):
+   config = camera.get_config()
+   for category in config_dictionary:
       if category == 'other':
          continue
-      for item in config[category]:
-         node = c.get_child_by_name(item)
-         if not isinstance(config[category][item]['value'], type(None)):
-            node.set_value(config[category][item]['value'])
-   camera.set_config(c)
+      for item in config_dictionary[category]:
+         node = config.get_child_by_name(item)
+         if not isinstance(config_dictionary[category][item]['value'],
+                           type(None)):
+            node.set_value(config_dictionary[category][item]['value'])
+   camera.set_config(config)
 
-def print_camera_config(config):
-   for category in config:
+def print_camera_config(config_dictionary):
+   for category in config_dictionary:
       msg = '{0}'.format(category)
       msg += '\n'
       sys.stdout.write(msg)
       sys.stdout.flush()
-      for item in config[category]:
-         msg = '   {0} '.format(item)
-         msg += '{0}:  '.format(type(config[category][item]['value']))
-         msg += '{0}'.format(config[category][item]['value'])
+      for item in config_dictionary[category]:
+         msg = '   {0}'.format(item)
+         msg += ' {0}:'.format(type(config_dictionary[category][item]['value']))
+         msg += '  {0}'.format(config_dictionary[category][item]['value'])
          msg += '\n'
          sys.stdout.write(msg)
          sys.stdout.flush()
@@ -61,8 +65,8 @@ if __name__ == '__main__':
    msg += separator
    sys.stdout.write(msg)
    sys.stdout.flush()
-   config = get_camera_config(camera)
-   print_camera_config(config)
+   config_dictionary = get_camera_config(camera)
+   print_camera_config(config_dictionary)
    time.sleep(5)
 
    msg = separator
@@ -73,22 +77,22 @@ if __name__ == '__main__':
    sys.stdout.write(msg)
    sys.stdout.flush()
    # imageformat <class 'str'>
-   config['imgsettings']['imageformat']['value'] = 'Large Fine JPEG'
+   config_dictionary['imgsettings']['imageformat']['value'] = 'Large Fine JPEG'
    # iso <class 'str'>
-   config['imgsettings']['iso']['value'] = '800'
+   config_dictionary['imgsettings']['iso']['value'] = '800'
    # whitebalance <class 'str'>
-   #config['imgsettings']['whitebalance']['value'] = 'Daylight'
+   #config_dictionary['imgsettings']['whitebalance']['value'] = 'Daylight'
    # autoexposuremode <class 'str'>
-   config['capturesettings']['autoexposuremode']['value'] = 'Manual'
+   config_dictionary['capturesettings']['autoexposuremode']['value'] = 'Manual'
    # picturestyle <class 'str'>
-   #config['capturesettings']['picturestyle']['value'] = 'Landscape'
+   #config_dictionary['capturesettings']['picturestyle']['value'] = 'Landscape'
    # aperture <class 'str'>
-   config['capturesettings']['aperture']['value'] = '8'
+   config_dictionary['capturesettings']['aperture']['value'] = '8'
    # shutterspeed <class 'str'>
-   config['capturesettings']['shutterspeed']['value'] = '1/350'
+   config_dictionary['capturesettings']['shutterspeed']['value'] = '1/350'
    # meteringmode <class 'str'>
-   #config['capturesettings']['meteringmode']['value'] = 'Spot'
-   set_camera_config(camera, config)
+   #config_dictionary['capturesettings']['meteringmode']['value'] = 'Spot'
+   set_camera_config(camera, config_dictionary)
    time.sleep(5)
 
    msg = separator
@@ -97,8 +101,8 @@ if __name__ == '__main__':
    msg += separator
    sys.stdout.write(msg)
    sys.stdout.flush()
-   config = get_camera_config(camera)
-   print_camera_config(config)
+   config_dictionary = get_camera_config(camera)
+   print_camera_config(config_dictionary)
    time.sleep(5)
 
    msg = separator
@@ -128,22 +132,22 @@ if __name__ == '__main__':
    sys.stdout.write(msg)
    sys.stdout.flush()
    # imageformat <class 'str'>
-   config['imgsettings']['imageformat']['value'] = 'RAW'
+   config_dictionary['imgsettings']['imageformat']['value'] = 'RAW'
    # iso <class 'str'>
-   config['imgsettings']['iso']['value'] = '100'
+   config_dictionary['imgsettings']['iso']['value'] = '800'
    # whitebalance <class 'str'>
-   #config['imgsettings']['whitebalance']['value'] = 'Auto'
+   #config_dictionary['imgsettings']['whitebalance']['value'] = 'Auto'
    # autoexposuremode <class 'str'>
-   config['capturesettings']['autoexposuremode']['value'] = 'AV'
+   config_dictionary['capturesettings']['autoexposuremode']['value'] = 'TV'
    # picturestyle <class 'str'>
-   #config['capturesettings']['picturestyle']['value'] = 'Standard'
+   #config_dictionary['capturesettings']['picturestyle']['value'] = 'Auto'
    # aperture <class 'str'>
-   config['capturesettings']['aperture']['value'] = '4'
+   config_dictionary['capturesettings']['aperture']['value'] = 'implicit auto'
    # shutterspeed <class 'str'>
-   config['capturesettings']['shutterspeed']['value'] = 'auto'
+   config_dictionary['capturesettings']['shutterspeed']['value'] = '1/125'
    # meteringmode <class 'str'>
-   #config['capturesettings']['meteringmode']['value'] = 'Evaluative'
-   set_camera_config(camera, config)
+   #config_dictionary['capturesettings']['meteringmode']['value'] = 'Evaluative'
+   set_camera_config(camera, config_dictionary)
    time.sleep(5)
 
    msg = separator
@@ -152,7 +156,7 @@ if __name__ == '__main__':
    msg += separator
    sys.stdout.write(msg)
    sys.stdout.flush()
-   config = get_camera_config(camera)
-   print_camera_config(config)
+   config_dictionary = get_camera_config(camera)
+   print_camera_config(config_dictionary)
 
    camera.exit()
