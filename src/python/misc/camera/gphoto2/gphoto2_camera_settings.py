@@ -66,6 +66,7 @@ if __name__ == '__main__':
    sys.stdout.write(msg)
    sys.stdout.flush()
    config_dictionary = get_camera_config(camera)
+   original_config_dictionary = copy.deepcopy(config_dictionary)
    print_camera_config(config_dictionary)
    time.sleep(5)
 
@@ -81,17 +82,17 @@ if __name__ == '__main__':
    # iso <class 'str'>
    config_dictionary['imgsettings']['iso']['value'] = '800'
    # whitebalance <class 'str'>
-   #config_dictionary['imgsettings']['whitebalance']['value'] = 'Daylight'
+   config_dictionary['imgsettings']['whitebalance']['value'] = 'Daylight'
    # autoexposuremode <class 'str'>
-   config_dictionary['capturesettings']['autoexposuremode']['value'] = 'Manual'
+   config_dictionary['capturesettings']['autoexposuremode']['value'] = 'TV'
    # picturestyle <class 'str'>
-   #config_dictionary['capturesettings']['picturestyle']['value'] = 'Landscape'
+   config_dictionary['capturesettings']['picturestyle']['value'] = 'Landscape'
    # aperture <class 'str'>
-   config_dictionary['capturesettings']['aperture']['value'] = '8'
+   config_dictionary['capturesettings']['aperture']['value'] = 'implicit auto'
    # shutterspeed <class 'str'>
-   config_dictionary['capturesettings']['shutterspeed']['value'] = '1/350'
+   config_dictionary['capturesettings']['shutterspeed']['value'] = '1/400'
    # meteringmode <class 'str'>
-   #config_dictionary['capturesettings']['meteringmode']['value'] = 'Spot'
+   config_dictionary['capturesettings']['meteringmode']['value'] = 'Spot'
    set_camera_config(camera, config_dictionary)
    time.sleep(5)
 
@@ -132,21 +133,29 @@ if __name__ == '__main__':
    sys.stdout.write(msg)
    sys.stdout.flush()
    # imageformat <class 'str'>
-   config_dictionary['imgsettings']['imageformat']['value'] = 'RAW'
+   config_dictionary['imgsettings']['imageformat']['value'] = \
+      original_config_dictionary['imgsettings']['imageformat']['value']
    # iso <class 'str'>
-   config_dictionary['imgsettings']['iso']['value'] = '800'
+   config_dictionary['imgsettings']['iso']['value'] = \
+      original_config_dictionary['imgsettings']['iso']['value']
    # whitebalance <class 'str'>
-   #config_dictionary['imgsettings']['whitebalance']['value'] = 'Auto'
+   config_dictionary['imgsettings']['whitebalance']['value'] = \
+      original_config_dictionary['imgsettings']['whitebalance']['value']
    # autoexposuremode <class 'str'>
-   config_dictionary['capturesettings']['autoexposuremode']['value'] = 'TV'
+   config_dictionary['capturesettings']['autoexposuremode']['value'] = \
+      original_config_dictionary['capturesettings']['autoexposuremode']['value']
    # picturestyle <class 'str'>
-   #config_dictionary['capturesettings']['picturestyle']['value'] = 'Auto'
+   config_dictionary['capturesettings']['picturestyle']['value'] = \
+      original_config_dictionary['capturesettings']['picturestyle']['value']
    # aperture <class 'str'>
-   config_dictionary['capturesettings']['aperture']['value'] = 'implicit auto'
+   config_dictionary['capturesettings']['aperture']['value'] = \
+      original_config_dictionary['capturesettings']['aperture']['value']
    # shutterspeed <class 'str'>
-   config_dictionary['capturesettings']['shutterspeed']['value'] = '1/125'
+   config_dictionary['capturesettings']['shutterspeed']['value'] = \
+      original_config_dictionary['capturesettings']['shutterspeed']['value']
    # meteringmode <class 'str'>
-   #config_dictionary['capturesettings']['meteringmode']['value'] = 'Evaluative'
+   config_dictionary['capturesettings']['meteringmode']['value'] = \
+      original_config_dictionary['capturesettings']['meteringmode']['value']
    set_camera_config(camera, config_dictionary)
    time.sleep(5)
 
