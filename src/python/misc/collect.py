@@ -239,16 +239,6 @@ while True:
          sys.stdout.flush()
       os.mkdir(logs_directory)
 
-   # Power on the camera
-#   if verbose:
-#      msg = 'Turning on the camera ...'
-#      msg += '\n'
-#      sys.stdout.write(msg)
-#      sys.stdout.flush()
-#   camera.power_on(station_parameters,
-#                   startup_duration=15,
-#                   verbose=verbose)
-
    # Initialize the camera
    camera_parameters = \
       camera.initialize(station_parameters, verbose=verbose)
@@ -353,9 +343,6 @@ while True:
             camera.close(station_parameters,
                          camera_parameters,
                          verbose=verbose)
-#            camera.power_off(station_parameters,
-#                             shutdown_duration=5,
-#                             verbose=verbose)
             if verbose:
                msg = '\n'
                sys.stdout.write(msg)
@@ -543,11 +530,11 @@ while True:
                            alert=True,
                            verbose=verbose)
 
-            # Check the capture status and power cycle (reset) the camera
-            # if permitted and necessary
-            if station_parameters['allowPowerCycle'] and capture_status == 0:
+            # Check the capture status, if the capture was not successful,
+            # re-initialize the camera
+            if capture_status == 0:
                if verbose:
-                  msg = 'Attempting a camera re-initialization ...'
+                  msg = 'Capture unsuccessful, re-initializing camera ...'
                   msg += '\n'
                   sys.stdout.write(msg)
                   sys.stdout.flush()
@@ -557,40 +544,34 @@ while True:
                             camera_parameters,
                             verbose=verbose)
 
-               # Power cycle the camera
-               if verbose:
-                  msg = 'Power cycling the camera ...'
-                  msg += '\n'
-                  sys.stdout.write(msg)
-                  sys.stdout.flush()
-               camera.power_cycle(station_parameters,
-                                  shutdown_duration=15,
-                                  startup_duration=15,
-                                  verbose=verbose)
-               if verbose:
-                  msg = '\n'
-                  sys.stdout.write(msg)
-                  sys.stdout.flush()
+               # Power cycle the camera if that is permissible according
+               # to the current configuation settings
+               if station_parameters['allowPowerCycle']:
+                  if verbose:
+                     msg = 'Power cycling the camera ...'
+                     msg += '\n'
+                     sys.stdout.write(msg)
+                     sys.stdout.flush()
+                  camera.power_cycle(station_parameters,
+                                     shutdown_duration=15,
+                                     startup_duration=15,
+                                     verbose=verbose)
+                  if verbose:
+                     msg = '\n'
+                     sys.stdout.write(msg)
+                     sys.stdout.flush()
 
                # Re-initialize the camera
                camera_parameters = \
                   camera.initialize(station_parameters, verbose=verbose)
 
-               # Send a power cycle alert e-mail
+               # Send an unsuccessful capture status alert SMS
                if verbose:
-                  msg = 'Sending a power cycle alert e-mail ...'
+                  msg = 'Sending an unsuccessful capture status alert SMS ...'
                   msg += '\n'
                   sys.stdout.write(msg)
                   sys.stdout.flush()
-               utils.send_power_cycle_email(station_parameters)
-
-               # Send a power cycle alert SMS
-               if verbose:
-                  msg = 'Sending a power cycle alert SMS ...'
-                  msg += '\n'
-                  sys.stdout.write(msg)
-                  sys.stdout.flush()
-               utils.send_power_cycle_sms(station_parameters)
+               utils.send_unsuccessful_capture_sms(station_parameters)
 
                if verbose:
                   msg = '\n'
@@ -602,6 +583,66 @@ while True:
 
             time.sleep(1)
             continue
+
+#            # Check the capture status and power cycle (reset) the camera
+#            # if permitted and necessary
+#            if station_parameters['allowPowerCycle'] and capture_status == 0:
+#               if verbose:
+#                  msg = 'Attempting a camera re-initialization ...'
+#                  msg += '\n'
+#                  sys.stdout.write(msg)
+#                  sys.stdout.flush()
+#
+#               # Close the camera connection
+#               camera.close(station_parameters,
+#                            camera_parameters,
+#                            verbose=verbose)
+#
+#               # Power cycle the camera
+#               if verbose:
+#                  msg = 'Power cycling the camera ...'
+#                  msg += '\n'
+#                  sys.stdout.write(msg)
+#                  sys.stdout.flush()
+#               camera.power_cycle(station_parameters,
+#                                  shutdown_duration=15,
+#                                  startup_duration=15,
+#                                  verbose=verbose)
+#               if verbose:
+#                  msg = '\n'
+#                  sys.stdout.write(msg)
+#                  sys.stdout.flush()
+#
+#               # Re-initialize the camera
+#               camera_parameters = \
+#                  camera.initialize(station_parameters, verbose=verbose)
+#
+#               # Send a power cycle alert e-mail
+#               if verbose:
+#                  msg = 'Sending a power cycle alert e-mail ...'
+#                  msg += '\n'
+#                  sys.stdout.write(msg)
+#                  sys.stdout.flush()
+#               utils.send_power_cycle_email(station_parameters)
+#
+#               # Send a power cycle alert SMS
+#               if verbose:
+#                  msg = 'Sending a power cycle alert SMS ...'
+#                  msg += '\n'
+#                  sys.stdout.write(msg)
+#                  sys.stdout.flush()
+#               utils.send_power_cycle_sms(station_parameters)
+#
+#               if verbose:
+#                  msg = '\n'
+#                  msg += 'Waiting for next trigger ...'
+#                  msg += '\n'
+#                  msg += '\n'
+#                  sys.stdout.write(msg)
+#                  sys.stdout.flush()
+#
+#            time.sleep(1)
+#            continue
 
          # If it is the scheduled time, turn the camera power on
          camera_power_on_time = \
@@ -676,9 +717,6 @@ while True:
       camera.close(station_parameters,
                    camera_parameters,
                    verbose=False)
-#      camera.power_off(station_parameters,
-#                       shutdown_duration=0,
-#                       verbose=False)
 
       if verbose:
          msg = '\n'
