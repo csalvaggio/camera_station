@@ -17,7 +17,11 @@ items = \
     'picturestyle',
     'aperture',
     'shutterspeed',
-    'meteringmode'
+    'meteringmode',
+    'focusmode',
+    'continuousaf',
+    'exposurecompensation',
+    'bracketmode'
    ]
 
 separator = 72 * '-'
