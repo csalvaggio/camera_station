@@ -10,7 +10,7 @@ def set_config(config, parameters, parameter, field_name, error_message):
       msg += '{0}'.format(parameter)
       raise ValueError(msg)
 
-   choices = ['implicit auto', 'auto', '0']
+   choices = ['implicit auto', 'auto']
    for idx in range(gp.gp_widget_count_choices(node)):
       choice = gp.check_result(gp.gp_widget_get_choice(node, idx))
       choices.append(choice)
@@ -30,12 +30,6 @@ def set_parameters_for_gphoto2_camera(parameters):
    if parameters['connection']:
       if parameters['configurable']:
          config = parameters['connection'].get_config()
-
-         parameter = 'autopoweroff'
-         field_name = 'autoPowerOff'
-         error_message = \
-            'Specified auto power off setting is not valid for this camera'
-         set_config(config, parameters, parameter, field_name, error_message)
 
          parameter = 'capturetarget'
          field_name = 'captureTarget'

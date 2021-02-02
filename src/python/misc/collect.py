@@ -33,10 +33,19 @@ parser.add_argument('-k', '--keep',
                     default=False,
                     help=help_message)
 
-help_message = 'perform a camera station parameter database dump '
+help_message = 'perform a camera station parameter database dump and exit '
 help_message += '[default is False]'
 parser.add_argument('-d', '--dump-database',
                     dest='dump_station_parameters_database',
+                    action='store_true',
+                    default=False,
+                    help=help_message)
+
+help_message = 'flash camera with settings from the camera configuration '
+help_message += 'database and exit '
+help_message += '[default is False]'
+parser.add_argument('-f', '--flash-camera-settings',
+                    dest='flash_camera_settings',
                     action='store_true',
                     default=False,
                     help=help_message)
@@ -45,6 +54,7 @@ args = parser.parse_args()
 verbose = args.verbose
 keep_pre_existing_files = args.keep_pre_existing_files
 dump_station_parameters_database = args.dump_station_parameters_database
+flash_camera_settings = args.flash_camera_settings
 
 initial_startup = True
 upload_successful = False
@@ -52,77 +62,87 @@ files_uploaded = 0
 
 camera_parameters = None
 
+if dump_station_parameters_database:
+   station_parameters = database.get_station_parameters(verbose=True)
+   hourly_parameters = database.get_hourly_parameters(verbose=True)
+   hardware_parameters = database.get_hardware_parameters(verbose=True)
+   sys.exit()
+
+if flash_camera_settings:
+   station_parameters = database.get_station_parameters(verbose=False)
+   if station_parameters['cameraType'].lower() == 'rpi':
+      parameters = database.get_rpi_camera_parameters(verbose=True)
+   elif station_parameters['cameraType'].lower() == 'gphoto2':
+      parameters = database.get_gphoto2_camera_parameters(verbose=True)
+   camera_parameters = camera.initialize(station_parameters, verbose=True)
+   camera.close(station_parameters, camera_parameters, verbose=True)
+   sys.exit()
+
 while True:
    # Pick up the latest parameters from the databases
-   if dump_station_parameters_database:
-      station_parameters = database.get_station_parameters(verbose=True)
-      hourly_parameters = database.get_hourly_parameters(verbose=True)
-      hardware_parameters = database.get_hardware_parameters(verbose=True)
-      sys.exit()
+   if verbose:
+      msg = 'Picking up the latest parameters from the '
+      msg += 'configuration databases ...'
+      msg += '\n'
+      sys.stdout.write(msg)
+      sys.stdout.flush()
+
+   station_parameters = database.get_station_parameters()
+   if station_parameters:
+      station_parameters_pickup_successful = True
+      previous_station_parameters = station_parameters
    else:
-      if verbose:
-         msg = 'Picking up the latest parameters from the '
-         msg += 'configuration databases ...'
+      station_parameters_pickup_successful = False
+      if initial_startup:
+         msg = '... exiting'
+         msg += '\n'
+         sys.stderr.write(msg)
+         sys.stderr.flush()
+         sys.exit()
+      else:
+         msg = '... using previous station parameters'
          msg += '\n'
          sys.stdout.write(msg)
          sys.stdout.flush()
+         station_parameters = previous_station_parameters
 
-      station_parameters = database.get_station_parameters()
-      if station_parameters:
-         station_parameters_pickup_successful = True
-         previous_station_parameters = station_parameters
+   hourly_parameters = database.get_hourly_parameters()
+   if hourly_parameters:
+      hourly_parameters_pickup_successful = True
+      previous_hourly_parameters = hourly_parameters
+   else:
+      hourly_parameters_pickup_successful = False
+      if initial_startup:
+         msg = '... exiting'
+         msg += '\n'
+         sys.stderr.write(msg)
+         sys.stderr.flush()
+         sys.exit()
       else:
-         station_parameters_pickup_successful = False
-         if initial_startup:
-            msg = '... exiting'
-            msg += '\n'
-            sys.stderr.write(msg)
-            sys.stderr.flush()
-            sys.exit()
-         else:
-            msg = '... using previous station parameters'
-            msg += '\n'
-            sys.stdout.write(msg)
-            sys.stdout.flush()
-            station_parameters = previous_station_parameters
+         msg = '... using previous hourly parameters'
+         msg += '\n'
+         sys.stdout.write(msg)
+         sys.stdout.flush()
+         hourly_parameters = previous_hourly_parameters
 
-      hourly_parameters = database.get_hourly_parameters()
-      if hourly_parameters:
-         hourly_parameters_pickup_successful = True
-         previous_hourly_parameters = hourly_parameters
+   hardware_parameters = database.get_hardware_parameters()
+   if hardware_parameters:
+      hardware_parameters_pickup_successful = True
+      previous_hardware_parameters = hardware_parameters
+   else:
+      hardware_parameters_pickup_successful = False
+      if initial_startup:
+         msg = '... exiting'
+         msg += '\n'
+         sys.stderr.write(msg)
+         sys.stderr.flush()
+         sys.exit()
       else:
-         hourly_parameters_pickup_successful = False
-         if initial_startup:
-            msg = '... exiting'
-            msg += '\n'
-            sys.stderr.write(msg)
-            sys.stderr.flush()
-            sys.exit()
-         else:
-            msg = '... using previous hourly parameters'
-            msg += '\n'
-            sys.stdout.write(msg)
-            sys.stdout.flush()
-            hourly_parameters = previous_hourly_parameters
-
-      hardware_parameters = database.get_hardware_parameters()
-      if hardware_parameters:
-         hardware_parameters_pickup_successful = True
-         previous_hardware_parameters = hardware_parameters
-      else:
-         hardware_parameters_pickup_successful = False
-         if initial_startup:
-            msg = '... exiting'
-            msg += '\n'
-            sys.stderr.write(msg)
-            sys.stderr.flush()
-            sys.exit()
-         else:
-            msg = '... using previous hardware parameters'
-            msg += '\n'
-            sys.stdout.write(msg)
-            sys.stdout.flush()
-            hardware_parameters = previous_hardware_parameters
+         msg = '... using previous hardware parameters'
+         msg += '\n'
+         sys.stdout.write(msg)
+         sys.stdout.flush()
+         hardware_parameters = previous_hardware_parameters
 
    # Check the efficacy of certain parameters
    if station_parameters['cameraPowerOnOffset'] > 0:
@@ -565,13 +585,14 @@ while True:
                camera_parameters = \
                   camera.initialize(station_parameters, verbose=verbose)
 
-               # Send an unsuccessful capture status alert SMS
-               if verbose:
-                  msg = 'Sending an unsuccessful capture status alert SMS ...'
-                  msg += '\n'
-                  sys.stdout.write(msg)
-                  sys.stdout.flush()
-               utils.send_unsuccessful_capture_sms(station_parameters)
+               # Send an unsuccessful capture status SMS
+               if not station_parameters['doNotDisturb']:
+                  if verbose:
+                     msg = 'Sending an unsuccessful capture status SMS ...'
+                     msg += '\n'
+                     sys.stdout.write(msg)
+                     sys.stdout.flush()
+                  utils.send_unsuccessful_capture_sms(station_parameters)
 
                if verbose:
                   msg = '\n'
