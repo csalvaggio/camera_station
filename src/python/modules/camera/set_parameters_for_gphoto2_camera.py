@@ -3,12 +3,19 @@ import sys
 import gphoto2 as gp
 
 def set_config(config, parameters, parameter, field_name, error_message):
-   node = gp.check_result(gp.gp_widget_get_child_by_name(config, parameter))
+   try:
+      node = gp.check_result(gp.gp_widget_get_child_by_name(config, parameter))
+   except:
+      msg = 'Specified parameter not found in camera: '
+      msg += '{0}'.format(parameter)
+      raise ValueError(msg)
+
    choices = []
    for idx in range(gp.gp_widget_count_choices(node)):
       choice = gp.check_result(gp.gp_widget_get_choice(node, idx))
       choices.append(choice)
-   if parameters[field_name] in choices:
+
+   if parameters[field_name] in choices or len(choices) == 0:
       try:
          node.set_value(parameters[field_name])
          parameters['connection'].set_config(config)
