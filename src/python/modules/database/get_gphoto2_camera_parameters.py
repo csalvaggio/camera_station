@@ -14,14 +14,22 @@ def get_gphoto2_camera_parameters(verbose=False):
    if db.is_connected:
       # Establish the list of fields to query
       fields = ('ID',
+                'autoPowerOff',
+                'captureTarget',
                 'imageFormat',
                 'ISO',
-                'awbMode',
-                'exposureMode',
+                'whiteBalance',
+                'colorSpace',
+                'exposureCompensation',
+                'focusMode',
+                'continuousAF',
+                'aspectRatio',
+                'autoExposureMode',
+                'driveMode',
                 'pictureStyle',
                 'aperture',
                 'shutterSpeed',
-                'meterMode',
+                'meteringMode',
                 'configurable')
 
       # Build the query
