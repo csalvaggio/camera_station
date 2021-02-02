@@ -10,12 +10,12 @@ def set_config(config, parameters, parameter, field_name, error_message):
       msg += '{0}'.format(parameter)
       raise ValueError(msg)
 
-   choices = []
+   choices = ['implicit auto', 'auto', '0']
    for idx in range(gp.gp_widget_count_choices(node)):
       choice = gp.check_result(gp.gp_widget_get_choice(node, idx))
       choices.append(choice)
 
-   if parameters[field_name] in choices or len(choices) == 0:
+   if parameters[field_name] in choices:
       try:
          node.set_value(parameters[field_name])
          parameters['connection'].set_config(config)
