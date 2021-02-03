@@ -3,7 +3,7 @@ import sys
 
 import database
 
-def get_gphoto2_camera_parameters(verbose=False):
+def get_gphoto2_camera_parameters(station_parameters, verbose=False):
    # Establish the database connection
    db = database.db_connect()
 
@@ -14,6 +14,7 @@ def get_gphoto2_camera_parameters(verbose=False):
    if db.is_connected:
       # Establish the list of fields to query
       fields = ('ID',
+                'stationName',
                 'captureTarget',
                 'imageFormat',
                 'ISO',
@@ -37,7 +38,8 @@ def get_gphoto2_camera_parameters(verbose=False):
          query += field
          query += ', '
       query = query[0:-2] + ' '
-      query += 'FROM gphoto2_camera_parameters'
+      query += 'FROM gphoto2_camera_parameters' + ' '
+      query += 'WHERE stationName="' + station_parameters['stationName'] + '"'
 
       #Establish the database record cursor/pointer
       cursor = db.cursor()

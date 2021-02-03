@@ -4,8 +4,15 @@ import gphoto2 as gp
 
 import camera
 import database
+import utils
 
-camera_parameters = database.get_gphoto2_camera_parameters()
+station_parameters = database.get_station_parameters(verbose=False)
+hardware_parameters = database.get_hardware_parameters()
+mac_address = utils.get_mac_address('-')
+idx = hardware_parameters['macAddress'].index(mac_address)
+station_parameters['stationName'] = hardware_parameters['stationName'][idx]
+
+camera_parameters = database.get_gphoto2_camera_parameters(station_parameters)
 
 camera_parameters['connection'] = gp.Camera()
 

@@ -70,10 +70,16 @@ if dump_station_parameters_database:
 
 if flash_camera_settings:
    station_parameters = database.get_station_parameters(verbose=False)
+   hardware_parameters = database.get_hardware_parameters()
+   mac_address = utils.get_mac_address('-')
+   idx = hardware_parameters['macAddress'].index(mac_address)
+   station_parameters['stationName'] = hardware_parameters['stationName'][idx]
    if station_parameters['cameraType'].lower() == 'rpi':
-      parameters = database.get_rpi_camera_parameters(verbose=True)
+      parameters = database.get_rpi_camera_parameters(station_parameters,
+                                                      verbose=True)
    elif station_parameters['cameraType'].lower() == 'gphoto2':
-      parameters = database.get_gphoto2_camera_parameters(verbose=True)
+      parameters = database.get_gphoto2_camera_parameters(station_parameters,
+                                                          verbose=True)
    camera_parameters = camera.initialize(station_parameters, verbose=True)
    camera.close(station_parameters, camera_parameters, verbose=True)
    sys.exit()

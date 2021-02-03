@@ -6,7 +6,7 @@ import picamera
 import camera
 import database
 
-def initialize_rpi_camera(verbose=False):
+def initialize_rpi_camera(station_parameters, verbose=False):
    # Pick up the camera parameters from the appropriate database
    if verbose:
       msg = 'Picking up the latest Raspberry Pi camera '
@@ -14,7 +14,14 @@ def initialize_rpi_camera(verbose=False):
       msg += '\n'
       sys.stdout.write(msg)
       sys.stdout.flush()
-   parameters = database.get_rpi_camera_parameters()
+   parameters = database.get_rpi_camera_parameters(station_parameters)
+
+   # Parse the database boolean parameters that need language-specific
+   # interpretation
+   if parameters['configurable'].lower() == 'true':
+      parameters['configurable'] = True
+   else:
+      parameters['configurable'] = False
 
    if parameters:
       # Turn on the Raspberry Pi camera

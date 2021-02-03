@@ -6,11 +6,11 @@ def initialize(station_parameters, verbose=False):
    if station_parameters['cameraType'].lower() == 'rpi':
       # Raspberry Pi camera
       parameters = \
-         camera.initialize_rpi_camera(verbose=verbose)
+         camera.initialize_rpi_camera(station_parameters, verbose=verbose)
    elif station_parameters['cameraType'].lower() == 'gphoto2':
       # gPhoto2 camera
       parameters = \
-         camera.initialize_gphoto2_camera(verbose=verbose)
+         camera.initialize_gphoto2_camera(station_parameters, verbose=verbose)
    else:
       msg = '*** ERROR *** Specified camera type not supported: '
       msg += '{0}'.format(station_parameters['cameraType'])

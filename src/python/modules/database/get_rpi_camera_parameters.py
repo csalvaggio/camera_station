@@ -14,6 +14,7 @@ def get_rpi_camera_parameters(verbose=False):
    if db.is_connected:
       # Establish the list of fields to query
       fields = ('ID',
+                'stationName',
                 'secondsToWarmup',
                 'useLosslessJpegCompression',
                 'brightness',
@@ -34,7 +35,8 @@ def get_rpi_camera_parameters(verbose=False):
                 'cropNormalizedWidth',
                 'cropNormalizedHeight',
                 'resolutionColumns',
-                'resolutionRows')
+                'resolutionRows',
+                'configurable')
 
       # Build the query
       query = 'SELECT '
@@ -42,7 +44,8 @@ def get_rpi_camera_parameters(verbose=False):
          query += field
          query += ', '
       query = query[0:-2] + ' '
-      query += 'FROM rpi_camera_parameters'
+      query += 'FROM rpi_camera_parameters' + ' '
+      query += 'WHERE stationName="' + station_parameters['stationName'] + '"'
 
       #Establish the database record cursor/pointer
       cursor = db.cursor()
