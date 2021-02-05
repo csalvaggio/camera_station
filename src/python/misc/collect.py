@@ -70,10 +70,7 @@ if dump_station_parameters_database:
 
 if flash_camera_settings:
    station_parameters = database.get_station_parameters(verbose=False)
-   hardware_parameters = database.get_hardware_parameters()
-   mac_address = utils.get_mac_address('-')
-   idx = hardware_parameters['macAddress'].index(mac_address)
-   station_parameters['stationName'] = hardware_parameters['stationName'][idx]
+   station_parameters['stationName'] = utils.get_station_name()
    if station_parameters['cameraType'].lower() == 'rpi':
       parameters = database.get_rpi_camera_parameters(station_parameters,
                                                       verbose=True)
