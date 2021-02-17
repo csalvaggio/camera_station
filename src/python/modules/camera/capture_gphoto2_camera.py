@@ -27,7 +27,7 @@ def capture_gphoto2_camera(camera_parameters, basename, verbose=False):
       msg += '\n'
       sys.stdout.write(msg)
       sys.stdout.flush()
-      return 0
+      return None
 
    # Add extension to the basename to match the image file on the
    # camera's SD card
@@ -68,4 +68,4 @@ def capture_gphoto2_camera(camera_parameters, basename, verbose=False):
    del camera_file
    del camera_filepath
 
-   return 1
+   return filepath

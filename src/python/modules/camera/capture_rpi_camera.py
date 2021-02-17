@@ -36,4 +36,4 @@ def capture_rpi_camera(camera_parameters, basename, verbose=False):
       sys.stdout.write(msg)
       sys.stdout.flush()
 
-   return 1
+   return basename + '.dng'

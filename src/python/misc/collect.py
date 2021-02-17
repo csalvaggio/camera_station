@@ -530,7 +530,7 @@ while True:
             local_basename = os.path.join(images_directory, basename)
 
             # Capture image and save it to the local disk
-            capture_status = \
+            capture_filepath = \
                camera.capture(station_parameters,
                               camera_parameters,
                               local_basename,
@@ -553,9 +553,8 @@ while True:
                            alert=True,
                            verbose=verbose)
 
-            # Check the capture status, if the capture was not successful,
-            # re-initialize the camera
-            if capture_status == 0:
+            # If the capture was not successful, re-initialize the camera
+            if capture_filepath == None:
                if verbose:
                   msg = 'Capture unsuccessful, re-initializing camera ...'
                   msg += '\n'
