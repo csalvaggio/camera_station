@@ -10,25 +10,29 @@ import database
 import utils
 
 
+# Default command-line parameter values
+display_captured_images = False
+scaling_factor = 0.2
+
 # Parse the command-line arguments
 description = 'Snapshot utility to grab images on-demand from the '
 description += 'connected camera'
 parser = argparse.ArgumentParser(description=description)
 
-help_message = 'view each captured image on the display '
-help_message += '[default is False]'
+help_message = 'view each captured image '
+help_message += '[default is {0}]'.format(display_captured_images)
 parser.add_argument('-d', '--display',
                     dest='display_captured_images',
                     action='store_true',
-                    default=False,
+                    default=display_captured_images,
                     help=help_message)
 
 help_message = 'image scaling factor for display '
-help_message += '[default is 0.25]'
+help_message += '[default is {0}]'.format(scaling_factor)
 parser.add_argument('-s', '--scaling-factor',
                     dest='scaling_factor',
                     type=float,
-                    default=0.25,
+                    default=scaling_factor,
                     help=help_message)
 
 args = parser.parse_args()
