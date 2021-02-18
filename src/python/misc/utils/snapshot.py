@@ -162,7 +162,6 @@ try:
 
          else:
             msg = '\n'
-            msg += '*** ERROR *** '
             msg += 'Image format ('
             msg += os.path.splitext(capture_filepath)[1]
             msg += ') unsupported by OpenCV v.'
