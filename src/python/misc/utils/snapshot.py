@@ -168,6 +168,8 @@ try:
             msg += ') unsupported by OpenCV v.'
             msg += cv2.__version__
             msg += '\n'
+            sys.stdout.write(msg)
+            sys.stdout.flush()
 
             msg = '\n'
             msg += 'Turning off the camera ...'
