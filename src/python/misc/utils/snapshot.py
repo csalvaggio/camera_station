@@ -129,7 +129,7 @@ try:
          sys.stdout.flush()
          im = cv2.imread(capture_filepath)
 
-         if im.any():
+         if im is not None:
             msg = '... scaling image for display'
             msg += '\n'
             sys.stdout.write(msg)
