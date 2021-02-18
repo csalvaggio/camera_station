@@ -4,57 +4,10 @@ import os
 import os.path
 import sys
 
-import rawpy
-
 import camera
 import clock
 import database
 import utils
-
-
-raw_extensions = \
-   ['.3fr',
-    '.ari',
-    '.arw',
-    '.bay',
-    '.braw',
-    '.crw',
-    '.cr2',
-    '.cr3',
-    '.cap',
-    '.data',
-    '.dcs',
-    '.dcr',
-    '.dng',
-    '.drf',
-    '.eip',
-    '.erf',
-    '.fff',
-    '.gpr',
-    '.iiq',
-    '.k25',
-    '.kdc',
-    '.mdc',
-    '.mef',
-    '.mos',
-    '.mrw',
-    '.nef',
-    '.nrw',
-    '.obm',
-    '.orf',
-    '.pef',
-    '.ptx',
-    '.pxn',
-    '.r3d',
-    '.raf',
-    '.raw',
-    '.rwl',
-    '.rw2',
-    '.rwz',
-    '.sr2',
-    '.srf',
-    '.srw',
-    '.x3f']
 
 
 # Parse the command-line arguments
@@ -108,7 +61,7 @@ images_directory = \
 
 # If it does not exist, create the output directory
 if not os.path.isdir(images_directory):
-   msg = 'Creating output directory ...'
+   msg = 'Creating snapshots directory ...'
    msg += '\n'
    sys.stdout.write(msg)
    sys.stdout.flush()
@@ -167,58 +120,67 @@ try:
 
       # Display captured image to the screen if desired
       if display_captured_images:
-         extension = os.path.splitext(capture_filepath)[1].lower()
+         msg = '... reading captured image from'
+         msg += '\n'
+         msg += '       '
+         msg += capture_filepath
+         msg += '\n'
+         sys.stdout.write(msg)
+         sys.stdout.flush()
+         im = cv2.imread(capture_filepath)
 
-         # Check if the file is a known RAW file
-         if extension in raw_extensions:
-            msg = '... reading RAW image data'
+         if im.any():
+            msg = '... scaling image for display'
             msg += '\n'
             sys.stdout.write(msg)
             sys.stdout.flush()
-            raw = rawpy.imread(capture_filepath)
+            (height, width) = im.shape[:2]
+            desired_dimensions = \
+               (int(width * scaling_factor), int(height * scaling_factor))
+            resized = cv2.resize(im, desired_dimensions)
 
-            msg = '... performing CFA interpolation'
+            msg = '... displaying image'
             msg += '\n'
             sys.stdout.write(msg)
             sys.stdout.flush()
-            rgb = raw.postprocess()
-            im = cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR)
+            cv2.imshow(os.path.basename(capture_filepath), resized)
+
+            msg = '\n'
+            msg += 'Press <ESC> to continue'
+            msg += '\n'
+            sys.stdout.write(msg)
+            sys.stdout.flush()
+            while True:
+               k = cv2.waitKey(100)
+               if (k & 0xff) == 27:   # <ESC> pressed
+                  cv2.destroyWindow(os.path.basename(capture_filepath))
+                  break
+
+            msg = '\n'
+            sys.stdout.write(msg)
+            sys.stdout.flush()
+
          else:
-            msg = '... reading common image data'
+            msg = '\n'
+            msg += '*** ERROR *** '
+            msg += 'Image format ('
+            msg += os.path.splitext(capture_filepath)[1]
+            msg += ') unsupported by OpenCV v.'
+            msg += cv2.__version__
+            msg += '\n'
+
+            msg = '\n'
+            msg += 'Turning off the camera ...'
             msg += '\n'
             sys.stdout.write(msg)
             sys.stdout.flush()
-            im = cv2.imread(capture_filepath)
+            camera.close(station_parameters, camera_parameters, verbose=False)
 
-         msg = '... scaling image for display'
-         msg += '\n'
-         sys.stdout.write(msg)
-         sys.stdout.flush()
-         (height, width) = im.shape[:2]
-         desired_dimensions = \
-            (int(width * scaling_factor), int(height * scaling_factor))
-         resized = cv2.resize(im, desired_dimensions)
-
-         msg = '... displaying image'
-         msg += '\n'
-         sys.stdout.write(msg)
-         sys.stdout.flush()
-         cv2.imshow(os.path.basename(capture_filepath), resized)
-
-         msg = '\n'
-         msg += 'Press <ESC> to continue'
-         msg += '\n'
-         sys.stdout.write(msg)
-         sys.stdout.flush()
-         while True:
-            k = cv2.waitKey(100)
-            if (k & 0xff) == 27:   # <ESC> pressed
-               cv2.destroyWindow(os.path.basename(capture_filepath))
-               break
-
-         msg = '\n'
-         sys.stdout.write(msg)
-         sys.stdout.flush()
+            msg = 'Exiting ...'
+            msg += '\n'
+            sys.stdout.write(msg)
+            sys.stdout.flush()
+            sys.exit()
 
       continue
 
