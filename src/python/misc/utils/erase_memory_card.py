@@ -31,7 +31,20 @@ if __name__ == "__main__":
    import gphoto2
 
    camera = gphoto2.Camera()
-   camera.init()
+
+   try:
+      camera.init()
+   except:
+      msg = 'Camera is currently not available, it may'
+      msg += '\n'
+      msg += '   1) be attached to another process, or'
+      msg += '\n'
+      msg += '   2) need to be powered on'
+      msg += '\n'
+      msg += '\n'
+      sys.stdout.write(msg)
+      sys.stdout.flush()
+      sys.exit()
 
    full_paths = get_full_paths(camera)
 
