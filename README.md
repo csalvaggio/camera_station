@@ -223,7 +223,27 @@ This repository contains the ``/home/pi`` folder for the Raspberry Pi appliance 
         dtoverlay=disable-wifi
 
     This is necessary to allow the USB730L modem to respond in a timely fashion to permit an incoming ssh or VNC connection when a WiFi network is also available.  This may not be necessary when the device is in the field.
+
+## SPEEDTEST SETUP
+To set up the [Ookla Speedtest CLI](https://www.speedtest.net/apps/cli), issue the following commands
+
+    sudo apt-get update
+    sudo apt-get upgrade
     
+    # Remove any non-official versions that may be installed
+    sudo apt-get remove speedtest-cli
+    
+    sudo apt-get install gnupg1 apt-transport-https dirmngr
+    export INSTALL_KEY=379CE192D401AB61
+    sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys $INSTALL_KEY
+    echo "deb https://ookla.bintray.com/debian generic main" | sudo tee /etc/apt/sources.list.d/speedtest.list
+    sudo apt-get update
+    sudo apt-get install speedtest
+
+Run the following command to start up the speed test
+
+    speedtest
+
 ## CANON M100 SETUP
 After doing a factory reset on the Canon M100 camera, 
 
