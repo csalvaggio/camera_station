@@ -7,12 +7,13 @@ import graphics
 
 
 # Set default values for parameters
-plot_filename = None
 column_selected = None
 start_date = None
 end_date = None
 minimum_dependent = None
 maximum_dependent = None
+display = True
+plot_filename = None
 
 # Parse command line arguments
 description = 'Plot log data collected from the RIT/SRNL camera stations'
@@ -65,6 +66,13 @@ parser.add_argument('-max', '--maximum-dependent-value',
                     default=maximum_dependent,
                     help=help_message)
 
+help_message = 'Suppress display of plot to screen '
+help_message += '[default is False]'
+parser.add_argument('-n', '--no-display',
+                    dest='display',
+                    action='store_false',
+                    help=help_message)
+
 help_message = 'filename to store plot to (extension defines file format) '
 help_message += '[default is {0} '.format(plot_filename)
 help_message += '(no file is written)]'
@@ -81,6 +89,7 @@ start_date = args.start_date
 end_date = args.end_date
 minimum_dependent = args.minimum_dependent
 maximum_dependent = args.maximum_dependent
+display = args.display
 plot_filename = args.plot_filename
 
 # Read logged data from the provided file
@@ -173,7 +182,8 @@ else:
 
 graphics.plot(days,
               dependent,
-              xlabel = 'Day Number [UTC]',
-              ylabel = headers[column_selected],
-              ylim = y_limits,
-              saveFilename = plot_filename)
+              xlabel='Day Number [UTC]',
+              ylabel=headers[column_selected],
+              ylim=y_limits,
+              display=display,
+              saveFilename=plot_filename)

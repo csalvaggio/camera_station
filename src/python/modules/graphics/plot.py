@@ -290,6 +290,4 @@ if __name__ == '__main__':
       y += [(i + 1) * x[i]]
       label += ['$y = %ix$' % i]
 
-   saveFilename = 'plot.pdf'
-
    graphics.plot(x, y)
