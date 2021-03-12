@@ -1,3 +1,4 @@
+import numpy
 import sys
 import RPi.GPIO
 
@@ -141,8 +142,21 @@ class Voltmeter(object):
 
       self._mcp3008_analog_input_channel = mcp3008_analog_input_channel
 
+   @staticmethod
+   def reject_outliers(data, m = 2):
+      absolute_deviations = numpy.abs(data - numpy.median(data))
+      median_absolute_deviation = numpy.median(absolute_deviations)
+      if median_absolute_deviation > 0:
+         test_statistics = absolute_deviations / median_absolute_deviation
+      else:
+         test_statistics = numpy.zeros(len(data), numpy.float64)
+
+      return data[test_statistics < m]
+
    def read(self, samples=1):
-      accumulated_adc_output = 0
+      voltage_samples = numpy.zeros(samples, dtype=numpy.float64)
+
+      idx = 0
       for sample in range(samples):
          RPi.GPIO.output(self._spi_chip_select_shutdown_input_pin,
                          RPi.GPIO.HIGH)
@@ -182,10 +196,11 @@ class Voltmeter(object):
 
          adc_output >>= 1
 
-         accumulated_adc_output += adc_output
+         voltage_samples[idx] = adc_output * self._calibration_constant
+         idx += 1
 
-      voltage = self._calibration_constant * accumulated_adc_output / samples
-
+      voltage_samples = Voltmeter.reject_outliers(voltage_samples)
+      voltage = numpy.mean(voltage_samples)
       if voltage < self._minimum_voltage:
          return None
       else:
