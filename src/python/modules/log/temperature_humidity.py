@@ -89,27 +89,47 @@ def temperature_humidity(station_parameters,
 
       if alert:
          # Send a temperature warning SMS (if necessary)
-         if not station_parameters['doNotDisturb']:
-            if temperature < station_parameters['lowTemperatureWarning'] or \
-               temperature > station_parameters['highTemperatureWarning']:
+         if temperature < station_parameters['lowTemperatureWarning'] or \
+            temperature > station_parameters['highTemperatureWarning']:
+            if verbose:
+               msg = 'Sending a temperature warning SMS ...'
+               msg += '\n'
+               sys.stdout.write(msg)
+               sys.stdout.flush()
+            if station_parameters['doNotDisturb']:
                if verbose:
-                  msg = 'Sending a temperature warning SMS ...'
-                  msg += '\n'
+                  msg = 'Skipping ... DO NOT DISTURB SETTING IS ACTIVATED'
                   msg += '\n'
                   sys.stdout.write(msg)
                   sys.stdout.flush()
+            else:
                utils.send_temperature_warning_sms(station_parameters)
 
+            if verbose:
+               msg = '\n'
+               sys.stdout.write(msg)
+               sys.stdout.flush()
+
          # Send a humidity warning SMS (if necessary)
-         if not station_parameters['doNotDisturb']:
-            if humidity < station_parameters['lowHumidityWarning'] or \
-               humidity > station_parameters['highHumidityWarning']:
+         if humidity < station_parameters['lowHumidityWarning'] or \
+            humidity > station_parameters['highHumidityWarning']:
+            if verbose:
+               msg = 'Sending a humidity warning SMS ...'
+               msg += '\n'
+               sys.stdout.write(msg)
+               sys.stdout.flush()
+            if station_parameters['doNotDisturb']:
                if verbose:
-                  msg = 'Sending a humidity warning SMS ...'
-                  msg += '\n'
+                  msg = 'Skipping ... DO NOT DISTURB SETTING IS ACTIVATED'
                   msg += '\n'
                   sys.stdout.write(msg)
                   sys.stdout.flush()
+            else:
                utils.send_humidity_warning_sms(station_parameters)
+
+            if verbose:
+               msg = '\n'
+               sys.stdout.write(msg)
+               sys.stdout.flush()
 
    return temperature, humidity

@@ -326,10 +326,17 @@ while True:
          msg += '\n'
          sys.stdout.write(msg)
          sys.stdout.flush()
-      utils.send_health_email(station_parameters,
-                              station_parameters_pickup_successful,
-                              hourly_parameters_pickup_successful,
-                              hardware_parameters_pickup_successful)
+      if station_parameters['doNotDisturb']:
+         if verbose:
+            msg = 'Skipping ... DO NOT DISTURB SETTING IS ACTIVATED'
+            msg += '\n'
+            sys.stdout.write(msg)
+            sys.stdout.flush()
+      else:
+         utils.send_health_email(station_parameters,
+                                 station_parameters_pickup_successful,
+                                 hourly_parameters_pickup_successful,
+                                 hardware_parameters_pickup_successful)
 
       initial_startup = False
 
@@ -382,12 +389,19 @@ while True:
                msg += '\n'
                sys.stdout.write(msg)
                sys.stdout.flush()
-            utils.send_health_email(station_parameters,
-                                    station_parameters_pickup_successful,
-                                    hourly_parameters_pickup_successful,
-                                    hardware_parameters_pickup_successful,
-                                    upload_successful,
-                                    files_uploaded)
+            if station_parameters['doNotDisturb']:
+               if verbose:
+                  msg = 'Skipping ... DO NOT DISTURB SETTING IS ACTIVATED'
+                  msg += '\n'
+                  sys.stdout.write(msg)
+                  sys.stdout.flush()
+            else:
+               utils.send_health_email(station_parameters,
+                                       station_parameters_pickup_successful,
+                                       hourly_parameters_pickup_successful,
+                                       hardware_parameters_pickup_successful,
+                                       upload_successful,
+                                       files_uploaded)
             if verbose:
                msg = '\n'
                sys.stdout.write(msg)
@@ -588,12 +602,18 @@ while True:
                   camera.initialize(station_parameters, verbose=verbose)
 
                # Send an unsuccessful capture status SMS
-               if not station_parameters['doNotDisturb']:
+               if verbose:
+                  msg = 'Sending an unsuccessful capture status SMS ...'
+                  msg += '\n'
+                  sys.stdout.write(msg)
+                  sys.stdout.flush()
+               if station_parameters['doNotDisturb']:
                   if verbose:
-                     msg = 'Sending an unsuccessful capture status SMS ...'
+                     msg = 'Skipping ... DO NOT DISTURB SETTING IS ACTIVATED'
                      msg += '\n'
                      sys.stdout.write(msg)
                      sys.stdout.flush()
+               else:
                   utils.send_unsuccessful_capture_sms(station_parameters)
 
                if verbose:
