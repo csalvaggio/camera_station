@@ -108,35 +108,29 @@ while True:
 
 f.close()
 
-# Find the starting and ending indices for the date range specified
+# Find the starting index for the date range specified
 if start_date is None:
    start_idx = 1
 else:
    start_idx = 1
    while start_date != data[start_idx][0][0:10]:
       start_idx += 1
+      # If not found, set the index to the first position
       if start_idx >= len(data):
-         msg = 'Specified start date not found in log file, check value '
-         msg += 'and format, exiting ...'
-         msg += '\n'
-         sys.stderr.write(msg)
-         sys.stderr.flush()
-         sys.exit()
+         start_idx = 1
+         break
 
+# Find the ending index for the date range specified
 if end_date is None:
    end_idx = len(data)
 else:
    end_idx = len(data) - 1
    while end_date != data[end_idx][0][0:10]:
       end_idx -= 1
+      # If not found, set the index to the last position
       if end_idx <= 1:
-         msg = 'Specified end date not found in log file, check value '
-         msg += 'and format, exiting ...'
-         msg += '\n'
-         sys.stderr.write(msg)
-         sys.stderr.flush()
-         sys.exit()
-   end_idx += 1
+         end_idx = len(data)
+         break
 
 # If column to plot not provided, present headers to the user for selection
 if column_selected is None:
