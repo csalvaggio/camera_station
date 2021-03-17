@@ -68,15 +68,12 @@ def send_humidity_warning_sms(station_parameters):
 
 
 if __name__ == '__main__':
-
    import utils
+   import database
 
-   station_parameters = {}
+   station_parameters = database.get_station_parameters()
    station_parameters['stationName'] = 'cameraXXX'
-   station_parameters['smsSender'] = 'salvaggio@cis.rit.edu'
-   receivers = 'cnspci-sms@cis.rit.edu'
-   station_parameters['smsReceivers'] = receivers.split('|')
-   station_parameters['smtpServer'] = 'mail.cis.rit.edu'
-   station_parameters['humidityLabel'] = 'Humidity [%]'
+   station_parameters['smsReceivers'] = \
+      station_parameters['smsReceivers'].split('|')
 
    utils.send_humidity_warning_sms(station_parameters)

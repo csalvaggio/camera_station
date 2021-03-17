@@ -138,10 +138,17 @@ if __name__ == '__main__':
    import argparse
    import os
    import utils
+   import database
+
+   # Get database parameters
+   station_parameters = database.get_station_parameters()
+   station_parameters['stationName'] = 'cameraXXX'
+   station_parameters['smsReceivers'] = \
+      station_parameters['smsReceivers'].split('|')
 
    # Defaults
-   target_host = 'ftp.cis.rit.edu'
-   target_directory = 'dirs/cnspci/incoming/doe/srnl/mdct2/jasper/images'
+   target_host = station_parameters['ftpServer']
+   target_directory = station_parameters['ftpDirectory']
    local_directory = '.'
 
    # Parse the command-line arguments

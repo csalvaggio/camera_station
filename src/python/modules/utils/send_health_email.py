@@ -165,32 +165,13 @@ def send_health_email(station_parameters,
 
 
 if __name__ == '__main__':
-   import os.path
-
    import utils
+   import database
 
-   station_parameters = {}
+   station_parameters = database.get_station_parameters()
    station_parameters['stationName'] = 'cameraXXX'
-   station_parameters['longitude'] = -77.6088
-   station_parameters['latitude'] = 43.1566
-   station_parameters['localDirectory'] = '/media/pi/STORAGE'
-   station_parameters['updateHour'] = 8
-   station_parameters['uploadHour'] = 3
-   station_parameters['emailSender'] = 'salvaggio@cis.rit.edu'
-   receivers = 'salvaggio@cis.rit.edu|carl.salvaggio@rit.edu'
-   station_parameters['emailReceivers'] = receivers.split('|')
-   station_parameters['smtpServer'] = 'mail.cis.rit.edu'
-   station_parameters['temperatureLabel'] = 'Temperature [F]'
-   station_parameters['humidityLabel'] = 'Humidity [%]'
-   station_parameters['voltageWarningChannel'] = 1
-   station_parameters['voltmeter1Label'] = 'Battery [V]'
-   station_parameters['voltmeter2Label'] = ''
-   station_parameters['voltmeter3Label'] = ''
-   station_parameters['voltmeter4Label'] = ''
-   station_parameters['voltmeter5Label'] = ''
-   station_parameters['voltmeter6Label'] = ''
-   station_parameters['voltmeter7Label'] = ''
-   station_parameters['voltmeter8Label'] = ''
+   station_parameters['emailReceivers'] = \
+      station_parameters['emailReceivers'].split('|')
 
    utils.send_health_email(station_parameters,
                            True,
