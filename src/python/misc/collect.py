@@ -176,19 +176,19 @@ while True:
 
    # Parse the database boolean parameters that need language-specific
    # interpretation
-   if station_parameters['skipEvening'] is str:
+   if type(station_parameters['skipEvening']) is str:
       if station_parameters['skipEvening'].lower() == 'true':
          station_parameters['skipEvening'] = True
       else:
          station_parameters['skipEvening'] = False
 
-   if station_parameters['doNotDisturb'] is str:
+   if type(station_parameters['doNotDisturb']) is str:
       if station_parameters['doNotDisturb'].lower() == 'true':
          station_parameters['doNotDisturb'] = True
       else:
          station_parameters['doNotDisturb'] = False
 
-   if station_parameters['allowPowerCycle'] is str:
+   if type(station_parameters['allowPowerCycle']) is str:
       if station_parameters['allowPowerCycle'].lower() == 'true':
          station_parameters['allowPowerCycle'] = True
       else:
