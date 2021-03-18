@@ -49,7 +49,9 @@ def get_station_parameters(verbose=False):
                 'smsSender',
                 'smsReceivers',
                 'smtpServer',
+                'smtpServerIpAddress',
                 'ftpServer',
+                'ftpServerIpAddress',
                 'ftpDirectory',
                 'localDirectory')
 
