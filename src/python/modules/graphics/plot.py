@@ -215,9 +215,9 @@ def plot(x, y, figureTitle=None,
    if ylim:
       axes.set_ylim(ylim)
    if xgrid:
-      axes.xaxis.grid(True)
+      axes.xaxis.grid(True, linestyle=':', color='#e0e0e0')
    if ygrid:
-      axes.yaxis.grid(True)
+      axes.yaxis.grid(True, linestyle=':', color='#e0e0e0')
 
    # Set the font size for the tick labels (relative to the default for
    # the backend being used)
@@ -290,4 +290,9 @@ if __name__ == '__main__':
       y += [(i + 1) * x[i]]
       label += ['$y = %ix$' % i]
 
+   saveFilename = 'plot.pdf'
+
+   graphics.plot(x[0], y[0])
    graphics.plot(x, y)
+   graphics.plot(x, y, label=label, saveFilename=saveFilename)
+

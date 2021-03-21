@@ -179,5 +179,7 @@ graphics.plot(days,
               xlabel='Day Number [UTC]',
               ylabel=headers[column_selected],
               ylim=y_limits,
+              xgrid=True,
+              ygrid=True,
               display=display,
               saveFilename=plot_filename)
