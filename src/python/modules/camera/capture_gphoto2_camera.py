@@ -42,11 +42,28 @@ def capture_gphoto2_camera(camera_parameters, basename, verbose=False):
       msg += '\n'
       sys.stdout.write(msg)
       sys.stdout.flush()
-   camera_file = \
-      camera_parameters['connection'].file_get(camera_filepath.folder,
-                                               camera_filepath.name,
-                                               gp.GP_FILE_TYPE_NORMAL)
-   camera_file.save(filepath)
+   try:
+      camera_file = \
+         camera_parameters['connection'].file_get(camera_filepath.folder,
+                                                  camera_filepath.name,
+                                                  gp.GP_FILE_TYPE_NORMAL)
+   except:
+      msg = '... image extraction from camera\'s SD card was unsuccessful'
+      msg += '\n'
+      msg += '\n'
+      sys.stdout.write(msg)
+      sys.stdout.flush()
+      return None
+
+   try:
+      camera_file.save(filepath)
+   except:
+      msg = '... the save operation to local disk was unsuccessful'
+      msg += '\n'
+      msg += '\n'
+      sys.stdout.write(msg)
+      sys.stdout.flush()
+      return None
 
    # Delete image from the camera's SD card
    if verbose:
@@ -54,8 +71,17 @@ def capture_gphoto2_camera(camera_parameters, basename, verbose=False):
       msg += '\n'
       sys.stdout.write(msg)
       sys.stdout.flush()
-   camera_parameters['connection'].file_delete(camera_filepath.folder,
-                                               camera_filepath.name)
+   try:
+      camera_parameters['connection'].file_delete(camera_filepath.folder,
+                                                  camera_filepath.name)
+   except:
+      msg = '... image deletion operation from camera\'s SD card was '
+      msg += 'unsuccessful'
+      msg += '\n'
+      msg += '\n'
+      sys.stdout.write(msg)
+      sys.stdout.flush()
+      return None
 
    if verbose:
       msg = '... completed'
