@@ -59,6 +59,7 @@ flash_camera_settings = args.flash_camera_settings
 initial_startup = True
 upload_successful = False
 files_uploaded = 0
+captures_failed = 0
 
 camera_parameters = None
 
@@ -404,7 +405,9 @@ while True:
                                        hourly_parameters_pickup_successful,
                                        hardware_parameters_pickup_successful,
                                        upload_successful,
-                                       files_uploaded)
+                                       files_uploaded,
+                                       captures_failed)
+            captures_failed = 0
             if verbose:
                msg = '\n'
                sys.stdout.write(msg)
@@ -626,6 +629,8 @@ while True:
                   msg += '\n'
                   sys.stdout.write(msg)
                   sys.stdout.flush()
+
+            captures_failed += 1
 
             time.sleep(1)
             continue

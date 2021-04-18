@@ -13,7 +13,8 @@ def send_health_email(station_parameters,
                       hourly_parameters_pickup_successful=False,
                       hardware_parameters_pickup_successful=False,
                       upload_successful=False,
-                      files_uploaded=0):
+                      files_uploaded=0,
+                      captures_failed=0):
 
    # Get the hostname
    hostname = socket.gethostname()
@@ -125,6 +126,9 @@ def send_health_email(station_parameters,
       message += '{0:,}\n'.format(len(filenames))
       message += 'Local storage currently used:  '
       message += '{0:,} [bytes]\n'.format(bytes_used)
+   message += '\n'
+   message += 'Number of image captures that were unsuccessful: '
+   message += '{0}\n'.format(captures_failed)
 
    # Send the message
    smtp = smtplib.SMTP()
@@ -178,4 +182,5 @@ if __name__ == '__main__':
                            True,
                            True,
                            True,
-                           10)
+                           10,
+                           0)
