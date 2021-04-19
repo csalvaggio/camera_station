@@ -630,7 +630,7 @@ while True:
                   sys.stdout.write(msg)
                   sys.stdout.flush()
 
-            captures_failed += 1
+               captures_failed += 1
 
             time.sleep(1)
             continue
