@@ -18,7 +18,7 @@ def send_temperature_warning_sms(station_parameters):
       message += 'To: {0}\n'.format(r)
    else:
       message += 'To: {0}\n'.format(station_parameters['smsReceivers'])
-   message += 'Subject: Enclosure Temperature Warning\n'
+   message += 'Subject: Temperature Warning\n'
    message += '\n'
    message += 'Station name: {0}, '.format(station_parameters['stationName'])
    message += station_parameters['temperatureLabel']
