@@ -28,3 +28,4 @@ __pycache__
 src/python/pkg/*
 *.SAVE
 *.ORIG
+*.WORKING

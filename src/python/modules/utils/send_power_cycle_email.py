@@ -15,6 +15,8 @@ def send_power_cycle_email(station_parameters):
 
    # Get the IP address
    ip_address = utils.get_ip_address()
+   if ip_address is None:
+      ip_address = 'n/a'
 
    # Get the current universal coordinated time (UTC)
    iso8601_time_string = clock.iso8601_time_string_using_computer_clock()

@@ -196,12 +196,14 @@ while True:
          station_parameters['allowPowerCycle'] = False
 
    # Convert e-mail receivers from a string to a list
-   receivers = station_parameters['emailReceivers']
-   station_parameters['emailReceivers'] = receivers.split('|')
+   if isinstance(station_parameters['emailReceivers'], str):
+      receivers = station_parameters['emailReceivers']
+      station_parameters['emailReceivers'] = receivers.split('|')
 
    # Convert SMS receivers from a string to a list
-   receivers = station_parameters['smsReceivers']
-   station_parameters['smsReceivers'] = receivers.split('|')
+   if isinstance(station_parameters['smsReceivers'], str):
+      receivers = station_parameters['smsReceivers']
+      station_parameters['smsReceivers'] = receivers.split('|')
 
    # Organize hardware information into a device-specific dictionary
    hardware = {}
