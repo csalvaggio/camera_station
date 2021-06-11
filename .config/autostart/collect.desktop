@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Exec=/usr/bin/lxterminal --title="collect" --command "echo \"The collect script will start automatically in 5 minutes ...\" ; echo ; echo \"Type <Ctrl+C> to cancel\" ; echo ; sleep 300 ; PYTHONPATH=/home/pi/src/python/modules /usr/bin/python3 /home/pi/src/python/misc/collect.py --verbose --keep"
+Hidden=false
+X-GNOME-Autostart-enabled=true
+Name=collect
+Comment=Camera Station Collection Script

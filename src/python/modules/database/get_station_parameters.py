@@ -44,6 +44,7 @@ def get_station_parameters(verbose=False):
                 'cameraPowerOffOffset',
                 'cameraPowerOnOffset',
                 'allowPowerCycle',
+                'imageFileCountToExceedForReboot',
                 'emailSender',
                 'emailReceivers',
                 'smsSender',

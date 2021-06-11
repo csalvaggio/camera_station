@@ -1,6 +1,7 @@
 .bash_history
 .cache
-.config
+.config/*
+!.config/autostart
 .cups
 .dmrc
 .gnupg

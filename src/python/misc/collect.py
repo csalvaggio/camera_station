@@ -634,6 +634,17 @@ while True:
 
                captures_failed += 1
 
+            # Check if a system reboot is required
+            reboot_required = utils.is_reboot_required(station_parameters)
+
+            if reboot_required:
+               if verbose:
+                  msg = 'A system reboot has been requested ...'
+                  msg += '\n'
+                  msg += '\n'
+                  sys.stdout.write(msg)
+                  sys.stdout.flush()
+
             time.sleep(1)
             continue
 

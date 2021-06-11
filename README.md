@@ -214,8 +214,11 @@ This repository contains the ``/home/pi`` folder for the Raspberry Pi appliance 
 
     Configure maintenance cron jobs by typing ``crontab -e`` and inserting the following at the end of the crontab file
 
-        * * * * * pkill -f gvfs-gphoto2-volume-monitor
-        * * * * * pkill -f gvfsd-gphoto2
+        * * * * * /usr/bin/pkill -f gvfs-gphoto2-volume-monitor
+        * * * * * /usr/bin/pkill -f gvfsd-gphoto2
+
+        # If a system reboot has been requested, then do so
+        1 0 * * * /usr/bin/python3 /home/pi/src/python/misc/utils/reboot.py
 
 * If the Verizon Wireless USB730L modem is available, plug it in, and disable the onboard WiFi interface by editing the ``/boot/config.txt`` file and adding (or uncommenting) the following line
 
