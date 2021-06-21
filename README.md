@@ -220,6 +220,9 @@ This repository contains the ``/home/pi`` folder for the Raspberry Pi appliance 
         # If a system reboot has been requested, then do so
         1 0 * * * /usr/bin/python3 /home/pi/src/python/misc/utils/reboot.py
 
+        # Perform a weekly maintenance reboot
+        2 0 * * 2 sudo /sbin/reboot
+
 * If the Verizon Wireless USB730L modem is available, plug it in, and disable the onboard WiFi interface by editing the ``/boot/config.txt`` file and adding (or uncommenting) the following line
 
         # Uncomment this to disable the onboard WiFi
