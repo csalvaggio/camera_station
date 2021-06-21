@@ -608,6 +608,20 @@ while True:
                # Re-initialize the camera
                camera_parameters = \
                   camera.initialize(station_parameters, verbose=verbose)
+               if camera_parameters:
+                  camera_parameters_pickup_successful = True
+                  previous_camera_parameters = camera_parameters
+               else:
+                  camera_parameters_pickup_successful = False
+                  msg = '... using previous camera parameters'
+                  msg += '\n'
+                  sys.stdout.write(msg)
+                  sys.stdout.flush()
+                  camera_parameters = previous_camera_parameters
+               if verbose:
+                  msg = '\n'
+                  sys.stdout.write(msg)
+                  sys.stdout.flush()
 
                # Send an unsuccessful capture status SMS
                if verbose:

@@ -16,14 +16,14 @@ def initialize_rpi_camera(station_parameters, verbose=False):
       sys.stdout.flush()
    parameters = database.get_rpi_camera_parameters(station_parameters)
 
-   # Parse the database boolean parameters that need language-specific
-   # interpretation
-   if parameters['configurable'].lower() == 'true':
-      parameters['configurable'] = True
-   else:
-      parameters['configurable'] = False
-
    if parameters:
+      # Parse the database boolean parameters that need language-specific
+      # interpretation
+      if parameters['configurable'].lower() == 'true':
+         parameters['configurable'] = True
+      else:
+         parameters['configurable'] = False
+
       # Turn on the Raspberry Pi camera
       if verbose:
          msg = 'Turning on the Raspberry Pi camera ...'
@@ -69,8 +69,7 @@ def initialize_rpi_camera(station_parameters, verbose=False):
       msg = '... connection to RPi camera parameters database was '
       msg += 'unsuccessful'
       msg += '\n'
-      msg = '... exiting'
-      msg += '\n'
       sys.stderr.write(msg)
       sys.stderr.flush()
-      sys.exit()
+
+      return None       

@@ -16,14 +16,14 @@ def initialize_gphoto2_camera(station_parameters, verbose=False):
       sys.stdout.flush()
    parameters = database.get_gphoto2_camera_parameters(station_parameters)
 
-   # Parse the database boolean parameters that need language-specific
-   # interpretation
-   if parameters['configurable'].lower() == 'true':
-      parameters['configurable'] = True
-   else:
-      parameters['configurable'] = False
-
    if parameters:
+      # Parse the database boolean parameters that need language-specific
+      # interpretation
+      if parameters['configurable'].lower() == 'true':
+         parameters['configurable'] = True
+      else:
+         parameters['configurable'] = False
+
       # Connect to and initialize the gPhoto2 camera
       if verbose:
          msg = 'Connecting to the gPhoto2 camera ...'
@@ -74,8 +74,7 @@ def initialize_gphoto2_camera(station_parameters, verbose=False):
       msg = '... connection to gphoto2 camera parameters database was '
       msg += 'unsuccessful'
       msg += '\n'
-      msg = '... exiting'
-      msg += '\n'
       sys.stderr.write(msg)
       sys.stderr.flush()
-      sys.exit()
+
+      return None
