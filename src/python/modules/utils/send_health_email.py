@@ -70,6 +70,9 @@ def send_health_email(station_parameters,
       temperature = None
       humidity = None
 
+   packet_loss_percentage = \
+      utils.packet_loss_percentage('pegasus.cis.rit.edu', 10)
+
    # Form the message
    message = 'From: {0}\n'.format(station_parameters['emailSender'])
    if type(station_parameters['emailReceivers']) is list:
@@ -106,6 +109,8 @@ def send_health_email(station_parameters,
    message += station_parameters['humidityLabel']
    message += ':  '
    message += '{0:.1f}\n'.format(humidity) if humidity else 'n/a\n'
+   message += '\n'
+   message += 'Current packet loss: {0}%\n'.format(packet_loss_percentage)
    if station_parameters['updateHour'] >= 0:
       message += '\n'
       message += 'Most recent station parameters update:  '
