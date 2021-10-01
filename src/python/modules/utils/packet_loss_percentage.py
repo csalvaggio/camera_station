@@ -1,6 +1,6 @@
 import subprocess
 
-def packet_loss_percentage(hostname='8.8.8.8', count=10):
+def packet_loss_percentage(hostname='8.8.8.8', count=5):
    process = \
       subprocess.Popen(['ping', '-c', str(count), hostname],
                        stdout=subprocess.PIPE,
@@ -19,6 +19,8 @@ if __name__ == '__main__':
    import sys
    import utils
 
+   hostname = 'pegasus.cis.rit.edu'
+   count = 10
    packet_loss_percentage = utils.packet_loss_percentage()
 
    msg = 'Packet loss is {0}%'.format(packet_loss_percentage)
