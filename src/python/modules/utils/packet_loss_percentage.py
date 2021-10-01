@@ -21,7 +21,7 @@ if __name__ == '__main__':
 
    hostname = 'pegasus.cis.rit.edu'
    count = 10
-   packet_loss_percentage = utils.packet_loss_percentage()
+   packet_loss_percentage = utils.packet_loss_percentage(hostname, count)
 
    msg = 'Packet loss is {0}%'.format(packet_loss_percentage)
    msg += '\n'
