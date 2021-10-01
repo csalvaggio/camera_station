@@ -4,6 +4,7 @@ from .get_mac_address import get_mac_address
 from .get_station_name import get_station_name
 from .is_reboot_required import is_reboot_required
 from .network_available import network_available
+from .packet_loss_percentage import packet_loss_percentage
 from .send_health_email import send_health_email
 from .send_humidity_warning_sms import send_humidity_warning_sms
 from .send_power_cycle_email import send_power_cycle_email
